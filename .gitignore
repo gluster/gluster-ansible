@@ -1,0 +1,10 @@
+*~
+\#*#
+*.pyc
+*.pyo
+.*.swp
+.vagrant
+.tags*
+*.retry
+*.egg-info
+.eggs
