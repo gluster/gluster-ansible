@@ -1,0 +1,14 @@
+---
+# Create pv on all the disks
+- name: Create Physical Volume
+  pv: action={{item.action}}
+      disk={{item.disk}}
+      force={{item.force}}
+      uuid={{item.uuid}}
+      dataalignment={{item.dataalignment}}
+      zero={{item.zero}}
+      metadatasize={{item.metadatasize}}
+  with_items:
+  - "{{ pvcreate_list}}"
+
+# tasks file for pvcreate
