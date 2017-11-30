@@ -9,15 +9,15 @@ Each PhysicalVolume can be a disk partition, whole disk, meta device, or loopbac
 
 Role Variables
 --------------
-  
-| Name          | Example values   | Description                           |
-|---------------|------------------|---------------------------------------|
-| action        | change           | The action that needs to be performed on the pv. |
-| disk          | < disk >         | disk or partition on which the pv will be changed.  |
-| force (-f)    | y                | Force  the  creation  without  any confirmation.   |
-| uuid (-u)     | < uuid >         | Specify the uuid for the device. Without this option,pvchange generates a random uuid. |
-| allocatable   | {y|n}            | Enable or disable allocation of physical extents on this physical volume. |
-| metadataignore| {y|n}            | Ignore or un-ignore metadata areas on this physical volume. |
+
+| Parameters   | Required | Default | Choices | Description |
+| ----------   | -------- | ------- | ------- | ----------- |
+|allocatable   |no        |         |**yes** / **no** |Enable or disable allocation of physical extents on this physical volume.|
+|disk          |yes       |         | < disk >|List of disks on which the PV will be changed|
+|force         |no        |         |**yes** / **no**|Force the change without any confirmation.|
+|metadataignore|no        |         |**yes** / **no**|Ignore or un-ignore metadata areas on this physical volume.|
+|state         |yes       |         |**change**|Change physical volume.|
+|uuid          |no        |         |          |Specify the UUID for the device.|
 
 
 Example Playbook to call the role
