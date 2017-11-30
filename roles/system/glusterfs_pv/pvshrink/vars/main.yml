@@ -1,0 +1,13 @@
+---
+# vars file for pvshrink
+pvshrink_list:
+- "{{ pv1 }}"
+- "{{ pv2 }}"
+pv1:
+  action: resize
+  disk: /dev/vdb
+  setphysicalvolumesize: 1G
+pv2:
+  action: resize
+  disk: /dev/vdc
+  setphysicalvolumesize: 1G

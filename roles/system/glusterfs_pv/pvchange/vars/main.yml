@@ -1,0 +1,19 @@
+---
+# vars file for pvchange
+pvchange_list:
+- "{{ pv1 }}"
+- "{{ pv2 }}"
+pv1:
+  action: change
+  disk: /dev/vdb
+  all: n
+  metadataignore: n
+  uuid: y
+  allocatable: n
+pv2:
+  action: change
+  disk: /dev/vdc
+  all: n
+  metadataignore: n
+  uuid: y
+  allocatable: n

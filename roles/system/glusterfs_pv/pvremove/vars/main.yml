@@ -1,0 +1,13 @@
+---
+# vars file for pvremove
+pvremove_list:
+- "{{ pv1 }}"
+- "{{ pv2 }}"
+pv1:
+  action: remove
+  disk: /dev/vdb
+  force: y
+pv2:
+  action: remove
+  disk: /dev/vdc
+  force: y

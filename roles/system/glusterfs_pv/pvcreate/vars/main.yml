@@ -1,0 +1,21 @@
+---
+# vars file for pvcreate
+pvcreate_list:
+- "{{ pv1 }}"
+- "{{ pv2 }}"
+pv1:
+  action: create
+  disk: /dev/vdb
+  force: y
+  uuid: 92aa09de-7680-11e7-b5a5-be2e44b06b34
+  dataalignment: 1280
+  zero: n
+  metadatasize: 10
+pv2:
+  action: create
+  disk: /dev/vdc
+  force: y
+  uuid: 92aa09de-7680-11e7-b5a5-be2e44b06b35
+  dataalignment: 1280
+  zero: n
+  metadatasize: 10

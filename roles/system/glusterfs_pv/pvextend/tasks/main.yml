@@ -1,0 +1,9 @@
+---
+- name: Expand Physical Volumes on all the nodes
+  pv: action={{item.action}}
+      disks={{item.disks}}
+      setphysicalvolumesize={{item.setphysicalvolumesize}}
+  with_items:
+  - "{{ pvextend_list}}"
+
+# tasks file for pvextend

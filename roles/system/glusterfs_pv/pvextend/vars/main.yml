@@ -1,0 +1,13 @@
+---
+# vars file for pvextend
+pvextend_list:
+- "{{ pv1 }}"
+- "{{ pv2 }}"
+pv1:
+  action: resize
+  disks: /dev/vdb
+  setphysicalvolumesize: 30G
+pv2:
+  action: resize
+  disks: /dev/vdc
+  setphysicalvolumesize: 30G
