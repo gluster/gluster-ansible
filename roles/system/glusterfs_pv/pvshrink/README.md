@@ -9,12 +9,12 @@ Existing PhysicalVolume on the disk mentioned.
 
 Role Variables
 --------------
-  
-| Name          | Example values   | Description                           |
-|---------------|------------------|---------------------------------------|
-| action        | resize           | The action that needs to be performed on the pv. |
-| disk          | < disk >         | disk or partition on which the pv will be shrunk.  |
-| setphysicalvolumesize| < 1 G >   | Overrides the automatically-detected size of the PV. |
+
+| Parameters  | Required | Default | Choices  | Description |
+| ----------  | -------- | ------- | -------  | ----------- |
+|disk         |yes       |         |          |List of disks to extend PV|
+|setphysicalvolumesize|no|         |          |Overrides  the automatically-detected size of the PV.|
+|state        |yes       |         |**resize**|Shrink physical volume|
 
 
 Example Playbook to call the role

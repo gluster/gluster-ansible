@@ -9,12 +9,12 @@ Existing PhysicalVolume on the disk mentioned.
 
 Role Variables
 --------------
-  
-| Name          | Example values   | Description                           |
-|---------------|------------------|---------------------------------------|
-| action        | remove           | The action that needs to be performed on the pv. |
-| disk          | < disk >         | disk or partition from which the physical volume will be removed.  |
-| force (-f)    | y                | Force  the  removal  without  any confirmation.   |
+
+| Parameters  | Required | Default | Choices | Description |
+| ----------  | -------- | ------- | ------- | ----------- |
+|disk         |yes       |         |         |List of disks to remove PV|
+|force        |no        |         |**yes** / **no**|Force the removal without any confirmation.|
+|state        |yes       |         |**absent**|Remove physical volume|
 
 
 Example Playbook to call the role
