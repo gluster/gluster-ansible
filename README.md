@@ -12,10 +12,7 @@ The roles are classified into categories and reside in sub-directories under dir
 
 Any custom modules that do not fit to Ansible upstream can be placed under modules/ directory.
 
-To contribute to the project, refer [Contributing].
-
-**TODO**: Write `CONTRIBUTING.md'.
-
+To contribute to the project, refer [Contributing](CONTRIBUTING.md).
 
 ## Roles
 
