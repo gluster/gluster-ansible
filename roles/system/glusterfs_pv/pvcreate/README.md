@@ -9,16 +9,16 @@ Each PhysicalVolume can be a disk partition, whole disk, meta device, or loopbac
 
 Role Variables
 --------------
-    
-| Name          | Example values   | Description                           |
-|---------------|------------------|---------------------------------------|
-| action        | create           | The action that needs to be performed on the pv. |
-| disk          | < disk >         | disk or partition on which the pv will be created.  |
-| force (-f)    | y                | Force  the  creation  without  any confirmation.   |
-| uuid (-u)     | < uuid >         | Specify the uuid for the device.  Without this option,pvcreate generates a random uuid. |
-| dataalignment (--dataalignment)  | 1280 | Align the start of the data to a multiple of this number. |
-| metadatasize (--metadatasize)    | < size > | The approximate amount of space to be set aside for each metadata area. |
-| zero (-Z)     | 0                | Whether or not the first 4 sectors of the device should be wiped.  |
+
+| Parameters  | Required | Default | Choices | Description |
+| ----------  | -------- | ------- | ------- | ----------- |
+|dataalignment|no        |         |         |Align the start of the data to a multiple of this number.|
+|disk         |yes       |         |         |List of disks on which PV will be created.|
+|force        |no        |         |**yes** / **no**|Force the creation without any confirmation.|
+|metadatasize |no        |         |         |The approximate amount of space to be set aside for each metadata area.|
+|state        |yes       |         |**present**|Create physical volume|
+|uuid         |no        |         |         |Specify the UUID for the device.|
+|zero         |no        |         |**y** / **n**|Whether or not to wipe the first 4 sectors (2048 bytes) of the device.|
 
 
 Example Playbook
