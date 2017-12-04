@@ -1,0 +1,8 @@
+---
+# tasks file for vgreduce
+- name: Reducing a volume group
+  vg: action={{ item.action}}
+      vgname={{ item.vgname}}
+      disk={{ item.disk}}
+  with_items:
+  - "{{ vgreduce_list}}"
