@@ -1,0 +1,12 @@
+---
+# tasks file for vgextend
+- name: Extending volume group on the disks
+  vg: action={{item.action}}
+      disk={{ item.disk }}
+      vgname={{ item.vgname }}
+      zero={{ item.zero}}
+      dataalignment={{item.dataalignment}}
+      metadatasize={{ item.metadatasize}}
+      metadataignore={{ item.metadataignore}}
+  with_items:
+  - "{{ vgextend_list }}"

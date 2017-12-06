@@ -1,0 +1,14 @@
+---
+# vars file for vgconvert
+vgconvert_list:
+- "{{ vg1 }}"
+- "{{ vg2 }}"
+
+vg1:
+  action: convert
+  vgname: vg1
+  metadatatype: 1
+vg2:
+  action: convert
+  vgname: vg1
+  metadatatype: 1
