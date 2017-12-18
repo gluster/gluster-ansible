@@ -35,25 +35,38 @@ Example Playbook
 
 Create a GlusterFS volume
 
+```
+
+---
+
 - hosts: master
   remote_user: root
   gather_facts: no
-  vars:
-      gluster_hosts:
-        - 10.70.43.142
-        - 10.70.42.25
-      state: present
-      force: yes
-      bricks:
-        - 10.70.43.142:/brick/rep
-        - 10.70.42.25:/brick/rep
-      replica: yes
-      replica_count: 2
-      volname: sample_vol
 
-  roles:
-    - glusterfs/peer
-    - glusterfs/volume-create
+  tasks:
+  - include_role:
+      name: glusterfs/peer
+    vars:
+        state: present
+        gluster_hosts:
+          - 10.70.43.142
+          - 10.70.42.25
+
+  - include_role:
+      name: glusterfs/volume-create
+    vars:
+        force: yes
+        gluster_hosts:
+          - 10.70.43.142
+          - 10.70.42.25
+        bricks:
+          - 10.70.43.142:/brick/rep
+          - 10.70.42.25:/brick/rep
+        replica: yes
+        replica_count: 2
+        volname: sample_vol
+
+```
 
 License
 -------
