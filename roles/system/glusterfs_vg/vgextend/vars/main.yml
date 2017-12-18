@@ -1,0 +1,21 @@
+---
+# vars file for vgextend
+vgextend_list:
+- "{{ vg1 }}"
+- "{{ vg2 }}"
+vg1:
+  action: extend
+  disk: /dev/vdc
+  vgname: vg1
+  zero: y
+  dataalignment: 1280
+  metadatasize: 2
+  metadataignore: y
+vg2:
+  action: extend
+  disk: /dev/vdc
+  vgname: vg1
+  zero: y
+  dataalignment: 1280
+  metadatasize: 2
+  metadataignore: y

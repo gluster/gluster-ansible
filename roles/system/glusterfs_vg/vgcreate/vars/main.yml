@@ -1,0 +1,21 @@
+---
+# vars file for vgcreate
+vgcreate_list:
+- "{{ vg1 }}"
+- "{{ vg2 }}"
+vg1:
+  action: create
+  vgname: vg1
+  disk: /dev/vdb
+  zero: y
+  dataalignment: 1280
+  maxlogicalvolumes: 2
+  maxphysicalvolumes: 2
+vg2:
+  action: create
+  vgname: vg2
+  disk: /dev/vdc
+  zero: y
+  dataalignment: 1280
+  maxlogicalvolumes: 2
+  maxphysicalvolumes: 2

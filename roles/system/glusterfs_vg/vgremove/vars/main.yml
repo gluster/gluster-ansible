@@ -1,0 +1,14 @@
+---
+# vars file for vgremove
+vgremove_list:
+- "{{ vg1 }}"
+- "{{ vg2 }}"
+
+vg1:
+  action: remove
+  force: y
+  vgname: vg1
+vg2:
+  action: remove
+  force: y
+  vgname: vg2

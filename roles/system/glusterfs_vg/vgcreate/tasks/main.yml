@@ -1,0 +1,12 @@
+---
+# tasks file for vgcreate
+- name: Create volume group on the disks
+  vg: action={{item.action}}
+      disk={{ item.disk }}
+      vgname={{ item.vgname }}
+      zero={{ item.zero}}
+      dataalignment={{ item.dataalignment}}
+      maxlogicalvolumes={{ item.maxlogicalvolumes}}
+      maxphysicalvolumes={{ item.maxphysicalvolumes}}
+  with_items:
+  - "{{ vgcreate_list}}"
