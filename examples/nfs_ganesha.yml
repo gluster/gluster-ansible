@@ -1,0 +1,10 @@
+---
+# Example playbook to setup NFS Ganesha
+
+- name: Setup NFS Ganesha on a Gluster Cluster
+  hosts: nfs-ganehsa-hosts
+  gather_facts: no
+  remote_user: root
+  roles:
+        - gluster-volume
+        - nfs-ganesha

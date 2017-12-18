@@ -1,0 +1,17 @@
+---
+# tasks file for volume-create
+# TODO: Peer probe the nodes
+
+- name: Create a volume
+  glusterfs_volume:
+           state=present
+           volume="{{ volname }}"
+           bricks="{{ bricks }}"
+           hosts="{{ gluster_hosts }}"
+           transport="{{ transport }}"
+           replica_count="{{ replica_count }}"
+           arbiter_count="{{ arbiter_count }}"
+           disperse="{{ disperse }}"
+           disperse_count="{{ disperse_count }}"
+           redundancy_count="{{ redundancy_count }}"
+           force="{{ force }}"
