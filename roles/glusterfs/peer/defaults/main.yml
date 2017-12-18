@@ -1,0 +1,4 @@
+---
+# defaults file for peer-probe
+force: no
+state: absent
