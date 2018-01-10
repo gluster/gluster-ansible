@@ -1,0 +1,6 @@
+---
+- hosts: master
+  remote_user: root
+  roles:
+    - glusterfs/peer_probe
+

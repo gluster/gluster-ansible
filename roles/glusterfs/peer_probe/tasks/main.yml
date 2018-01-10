@@ -1,0 +1,8 @@
+---
+# Creates a Trusted Storage Pool
+- name: Creates a Trusted Storage Pool
+  shell: "gluster peer probe {{ item }}"
+  with_items:
+  - 10.70.43.151
+  - 10.70.43.153
+  when: ansible_os_platform|lower == 'redhat'
