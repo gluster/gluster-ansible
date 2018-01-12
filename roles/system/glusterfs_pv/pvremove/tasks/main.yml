@@ -1,6 +1,6 @@
 ---
 - name: Remove Physical Volumes (if any)
-  pv: action={{item.action}}
+  pv: state={{state}}
       disk={{item.disk}}
       force={{item.force}}
   with_items:

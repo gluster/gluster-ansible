@@ -1,7 +1,7 @@
 ---
 # Create pv on all the disks
 - name: Create Physical Volume
-  pv: action={{item.action}}
+  pv: state={{state}}
       disk={{item.disk}}
       force={{item.force}}
       uuid={{item.uuid}}

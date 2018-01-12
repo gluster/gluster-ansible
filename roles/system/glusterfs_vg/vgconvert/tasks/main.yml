@@ -1,7 +1,7 @@
 ---
 # tasks file for vgconvert
 - name: Converting a volume group
-  vg: action={{item.action}}
+  vg: state={{state}}
       vgname={{item.vgname}}
       metadatatype={{item.metadatatype}}
   with_items:

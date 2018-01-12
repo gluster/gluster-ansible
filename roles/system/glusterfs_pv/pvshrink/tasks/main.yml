@@ -1,6 +1,6 @@
 ---
 - name: Shrink the Physical Volumes on all the nodes.
-  pv: action={{item.action}}
+  pv: state={{state}}
       disk={{item.disk}}
       setphysicalvolumesize={{item.setphysicalvolumesize}}
   with_items:
