@@ -1,5 +1,5 @@
 ---
-# vars file for pvextend
+# Example vars file for pvextend
 pvextend_list:
 - "{{ pv1 }}"
 - "{{ pv2 }}"

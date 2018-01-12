@@ -1,7 +1,7 @@
 ---
 # tasks file for vgcreate
 - name: Create volume group on the disks
-  vg: action={{item.action}}
+  vg: state={{state}}
       disk={{ item.disk }}
       vgname={{ item.vgname }}
       zero={{ item.zero}}

@@ -1,7 +1,7 @@
 ---
 # tasks file for vgextend
 - name: Extending volume group on the disks
-  vg: action={{item.action}}
+  vg: state={{state}}
       disk={{ item.disk }}
       vgname={{ item.vgname }}
       zero={{ item.zero}}

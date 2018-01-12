@@ -1,6 +1,6 @@
 ---
 - name: Expand Physical Volumes on all the nodes
-  pv: action={{item.action}}
+  pv: state={{state}}
       disks={{item.disks}}
       setphysicalvolumesize={{item.setphysicalvolumesize}}
   with_items:
