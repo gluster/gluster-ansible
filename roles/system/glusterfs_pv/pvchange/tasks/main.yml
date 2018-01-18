@@ -1,6 +1,6 @@
 ---
 - name: Changing Physical Volumes on all the nodes
-  pv: action=change
+  pv: state={{state}}
       disk={{item.disk}}
       metadataignore={{item.metadataignore}}
       uuid={{item.uuid}}

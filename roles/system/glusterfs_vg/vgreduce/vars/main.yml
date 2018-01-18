@@ -1,13 +1,2 @@
 ---
 # vars file for vgreduce
-vgreduce_list:
-- "{{ vg1 }}"
-- "{{ vg2 }}"
-vg1:
-  action: reduce
-  vgname: vg1
-  disk: /dev/vdc
-vg2:
-  action: reduce
-  vgname: vg2
-  disk: /dev/vdc
