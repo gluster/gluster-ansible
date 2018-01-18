@@ -1,0 +1,31 @@
+---
+# tasks file for nfs-ganesha
+- name: Check package sanity
+  include_tasks: prereq/package_check.yml
+
+- name: Configure services
+  include_tasks: prereq/configure_services.yml
+
+- name: Generate public key
+  include_tasks: generate_public_key.yml
+
+- name: Copy the ssh keys to all the nodes
+  include_tasks: copy_ssh_keys.yml
+
+- name: Create a shared mount
+  include_tasks: gluster-shared-volume-mount.yml
+
+- name: Set PCS Auth password
+  include_tasks: set_pcs_auth_passwd.yml
+
+- name: Set PCS Authentication
+  include_tasks: set_pcs_authentication.yml
+
+- name: Create Ganesha configuration file
+  include_tasks: ganesha_conf_create.yml
+
+- name: Define service ports for NFS ganesha
+  include_tasks: define_service_ports.yml
+
+- name: Enable NFS Ganesha
+  include_tasks: nfs_ganesha_enable.yml

@@ -5,4 +5,4 @@
   glusterfs_peer:
                 state: "{{ state }}"
                 nodes: "{{ gluster_hosts }}"
-                force: "{{ force | default('no') }}"
+                force: "{{ force | default('') }}"
