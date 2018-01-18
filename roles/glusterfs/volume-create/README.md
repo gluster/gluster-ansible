@@ -18,12 +18,13 @@ Role Variables
 | bricks | yes | |   | Bricks that form the GlusterFS volume. The format of the bricks would be hostname:mountpoint/brick_dir alternatively user can provide just mountpoint/birck_dir, in such a case gluster_hosts variable has to be set |
 | disperse_count | | |  | Disperse count for the volume. If this value is specified, a dispersed volume will be  created |
 | force | no | | **yes** / **no** | Force option will be used while creating a volume, any warnings will be suppressed. |
-| gluster_hosts | no | |  | If the bricks are provided in host:brick format this field is not necessary. If the bricks are provided in mountpoint/brick_dir format nodes field is mandatory and one to one mapping is done between nodes and brick_dirs. |
+| gluster_hosts | yes | |  | Contains the list of hosts that have to be peer probed. |
 | redundancy_count | no | |  | Specifies the number of redundant bricks while creating a disperse volume. If redundancy count is missing an optimal value is computed. |
 | replica_count |  | | **2** / **3** | Replica count while creating a volume. Currently replica 2 and replica 3 are supported. |
+| start | no | | **yes** / **no** | Starts the volume upon creation if start is ste to yes. |
 | state | yes | | **present** / **absent** / **started** / **stopped** / **set** | If value is present volume will be created. If value is absent, volume will be deleted. If value is started, volume will be started. If value is stopped, volume will be stopped. |
 | transport | no | tcp | **tcp** / **rdma** / **tcp,rdma** | The transport type for the volume. |
-| name | yes | |  | Name of the volume. Refer GlusterFS documentation for valid characters in a volume name. |
+| volname | yes | |  | Name of the volume. Refer GlusterFS documentation for valid characters in a volume name. |
 
 Dependencies
 ------------
