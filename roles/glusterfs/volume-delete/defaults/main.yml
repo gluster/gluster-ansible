@@ -1,0 +1,3 @@
+---
+# defaults file for volume-create
+volname: glustervol
