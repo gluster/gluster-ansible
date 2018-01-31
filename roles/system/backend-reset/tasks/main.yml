@@ -1,0 +1,17 @@
+---
+# tasks file for backend-reset
+- name: Unmount the mounted volumes
+  include_role:
+      name: glusterfs_umount
+
+- name: Removes existing Logical Volume
+  include_role:
+      name: glusterfs_lv/lvremove
+
+- name: Removes volume group on the disks
+  include_role:
+      name: glusterfs_vg/vgremove
+
+- name: Removes existing Physical Volume
+  include_role:
+      name: glusterfs_pv/pvremove
