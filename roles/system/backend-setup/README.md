@@ -1,12 +1,14 @@
 backend-setup
 =============
 
-A brief description of the role goes here.
+Creates backend for GlusterFS clusters. PV, VG, and LV are created with the
+default gluster specific names.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Ansible 2.3 and above
+GlusterFS 3.x and above
 
 Role Variables
 --------------
@@ -16,23 +18,26 @@ A description of the settable variables for this role should go here, including 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+The roles imported here are:
+- glusterfs_pvcreate
+- glusterfs_vgcreate
+- glusterfs_lvcreate
+- glusterfs_mount
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Create backend for GlusterFS clusters.
 
-    - hosts: servers
+```yaml
+    - name: backend-setup
+      hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - system/backend-setup
+
+```
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+GNU General Public License 3.0
