@@ -1,0 +1,35 @@
+---
+# vars file for glusterfs_mount
+create_dirs:
+- "{{ create_dir_lv1 }}"
+- "{{ create_dir_lv2 }}"
+create_dir_lv1:
+  path: /bricks/brick1
+create_dir_lv2:
+  path: /bricks/brick2
+
+create_fs:
+- "{{ create_fs_lv1 }}"
+- "{{ create_fs_lv2 }}"
+create_fs_lv1:
+  fstype: xfs
+  dev: /dev/vg1/lvol1
+create_fs_lv2:
+  fstype: xfs
+  dev: /dev/vg2/lvol1
+
+mount_list:
+- "{{ mount_lv1 }}"
+- "{{ mount_lv2 }}"
+mount_lv1:
+  path: /bricks/brick1
+  src: /dev/vg1/lvol1
+  fstype: xfs
+  state: mounted
+  opts: "inode64,noatime,nodiratime"
+mount_lv2:
+  path: /bricks/brick2
+  src: /dev/vg2/lvol1
+  fstype: xfs
+  state: mounted
+  opts: "inode64,noatime,nodiratime"

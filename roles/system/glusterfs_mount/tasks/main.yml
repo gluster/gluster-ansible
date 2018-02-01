@@ -1,0 +1,25 @@
+---
+# tasks file for glusterfs_mount
+- name: Create the dir to mount the volume, skips if present
+  file:
+    path={{item.path}}
+    state=directory
+  with_items:
+  - "{{ create_dirs}}"
+# mkfs
+- name: Create an xfs filesystem
+  filesystem:
+    fstype={{item.fstype}}
+    dev={{item.dev}}
+  with_items:
+  - "{{ create_fs}}"
+
+- name: Mount the volumes
+  gdeploy_mount:
+    path={{item.path}}
+    src={{item.src}}
+    fstype={{item.fstype}}
+    state={{item.state}}
+    opts={{item.opts}}
+  with_items:
+  - "{{ mount_list}}"
