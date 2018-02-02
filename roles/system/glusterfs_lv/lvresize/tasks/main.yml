@@ -1,0 +1,12 @@
+---
+# tasks file for lvresize
+- name: Resize LVs with specified size for the VGs
+  lv: state={{state}}
+      lvname={{item.lvname}}
+      vgname={{item.vgname}}
+      force={{item.force}}
+      extents={{item.extents}}
+      size={{item.size}}
+      stripe={{item.stripe}}
+  with_items:
+  - "{{ lvresize_list}}"

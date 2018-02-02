@@ -1,0 +1,9 @@
+---
+# tasks file for lvrename
+- name: Rename the attributes of the logical volume
+  lv: state={{state}}
+      vgname={{item.vgname}}
+      lvname={{item.lvname}}
+      new_name={{item.new_name}}
+  with_items:
+  - "{{ lvrename_list}}"

@@ -1,0 +1,22 @@
+---
+# vars file for lvresize
+lvresize_list:
+- "{{ lv1 }}"
+- "{{ lv2 }}"
+
+lv1:
+  state: resize
+  lvname: lvol1
+  vgname: vg1
+  force: y
+  extents: VG
+  size: +10G
+  stripe: n
+lv2:
+  state: resize
+  lvname: lvol1
+  vgname: vg2
+  force: y
+  extents: VG
+  size: +10G
+  stripe: n

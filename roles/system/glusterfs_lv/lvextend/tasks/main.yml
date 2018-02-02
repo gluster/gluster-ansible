@@ -1,0 +1,13 @@
+---
+# tasks file for lvextend
+- name: Extending the attributes of the logical volume
+  lv: state={{state}}
+      force={{item.force}}
+      vgname={{item.vgname}}
+      lvname={{item.lvname}}
+      nofsck={{item.nofsck}}
+      resizefs={{item.resizefs}}
+      size={{item.size}}
+      pvname={{item.pvname}}
+  with_items:
+  - "{{ lvextend_list}}"

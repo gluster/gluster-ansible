@@ -1,0 +1,19 @@
+---
+# vars file for lvchange
+lvchange_list:
+- "{{ lv1 }}"
+- "{{ lv2 }}"
+lv1:
+  state: change
+  zero: n
+  vgname: vg1
+  lvname: lvol1
+  errorwhenfull: n
+  permission: r
+lv2:
+  state: change
+  zero: n
+  vgname: vg2
+  lvname: lvol2
+  errorwhenfull: n
+  permission: r

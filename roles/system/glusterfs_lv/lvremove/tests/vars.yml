@@ -1,0 +1,23 @@
+---
+# vars file for lvremove
+lvremove_list:
+- "{{ lv1 }}"
+- "{{ lv2 }}"
+- "{{ tp1 }}"
+- "{{ tp2 }}"
+lv1:
+  state: remove
+  vgname: vg1
+  lvname: lvol1
+lv2:
+  state: remove
+  vgname: vg2
+  lvname: lvol1
+tp1:
+  state: remove
+  vgname: vg1
+  lvname: tp1
+tp2:
+  state: remove
+  vgname: vg2
+  lvname: tp2
