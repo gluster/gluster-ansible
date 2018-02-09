@@ -1,0 +1,7 @@
+---
+# defaults file for georep-create
+state: georep-create
+mastervol: mastervol
+slavevol: slavevol
+force: true
+secure: no

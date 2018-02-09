@@ -1,0 +1,9 @@
+---
+# Example vars file for georep-delete
+
+gluster_hosts:
+  - 10.70.43.142
+  - 10.70.42.25
+state: georep-delete
+mastervol: 10.70.43.142:mastervol
+slavevol: 10.70.42.25:slavevol

@@ -1,0 +1,11 @@
+---
+# Example vars file for georep-create
+
+gluster_hosts:
+  - 10.70.43.142
+  - 10.70.42.25
+state: georep-create
+mastervol: 10.70.43.142:mastervol
+slavevol: 10.70.42.25:slavevol
+force: true
+secure: no
