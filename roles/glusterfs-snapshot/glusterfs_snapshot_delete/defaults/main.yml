@@ -1,0 +1,6 @@
+---
+# defaults file for glusterfs_snapshot_delete
+state=snapshot-delete
+volname=10.70.46.13:glustervol
+snapname=glustersnap
+force=no

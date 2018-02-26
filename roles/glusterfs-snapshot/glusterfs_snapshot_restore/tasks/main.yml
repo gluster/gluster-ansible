@@ -1,0 +1,6 @@
+---
+# tasks file for glusterfs_snapshot_restore
+- name: Restores a snapshot
+  snapshot:
+           state=snapshot-restore
+           snapname={{ snapname }}

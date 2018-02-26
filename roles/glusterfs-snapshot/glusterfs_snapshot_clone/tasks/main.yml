@@ -1,0 +1,7 @@
+---
+- name: Clones a snapshot
+  snapshot:
+           state=snapshot-clone
+           snapname="{{ snapname }}"
+           clonename="{{ clonename }}"
+           force="{{ force }}"

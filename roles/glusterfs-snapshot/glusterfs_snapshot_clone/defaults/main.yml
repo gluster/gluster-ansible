@@ -1,0 +1,6 @@
+---
+# defaults file for glusterfs_snapshot_clone
+state=snapshot-clone
+volname=10.70.46.13:glustervol
+snapname=glustersnap
+clonename=glusterclone

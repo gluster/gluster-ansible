@@ -1,0 +1,7 @@
+---
+# tasks file for glusterfs_snapshot_activate
+- name: Activates a snapshot
+  snapshot:
+           state=snapshot-activate
+           snapname= "{{ snapname }}"
+           force= "{{ force }}"
