@@ -1,0 +1,25 @@
+---
+- name: Create xfs filesystem on partition
+  filesystem:
+    fstype: "{{ item.fs }}"
+    dev: "{{ item.device }}"  
+  ignore_errors: yes
+  with_items: "{{ filesystems }}"
+         
+- name: Add entry to /etc/fstab
+  lineinfile: 
+    path: /etc/fstab
+    line:  "{{ item.device}} {{ item.mountpoint }} {{ item.fs }} defaults 0 0"
+  with_items: "{{ filesystems }}"
+
+
+- name: Create the brick's directory 
+  file:
+    path: "{{ item.1 }}"
+    state: directory
+  with_subelements:
+    - "{{ glusterfs_volumes }}"
+    - bricks
+- name: Mount the line added in fstab
+  shell: mount -a
+

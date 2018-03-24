@@ -5,3 +5,11 @@
     - lvm
     - glusterfs
 
+- hosts: "{{ storage_type+'_nodes' }}"
+  roles:
+    - role: filesystem
+  tags:
+    - filesystem
+    - glusterfs
+
+
