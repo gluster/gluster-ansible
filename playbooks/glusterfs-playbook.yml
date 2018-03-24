@@ -13,3 +13,9 @@
     - glusterfs
 
 
+- hosts: "{{ storage_type+'_nodes' }}"
+  roles:
+    - role: glusterfs
+  tags:
+    - glusterfs
+
