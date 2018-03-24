@@ -1,0 +1,36 @@
+---
+- name: Update repository packages
+  apt:
+    update_cache: yes
+
+- name: Install GlusterFS server 
+  apt:
+    name:
+      - glusterfs-server
+      - git
+    state: present
+
+- name: Download gstatus
+  git:
+    repo: 'https://github.com/gluster/gstatus.git'
+    dest: /opt
+    clone: yes
+    update: no
+
+- name: Create Glusterf volume
+  gluster_volume:
+    state: present
+    name: "{{ item.name }}"
+    bricks: "{{ item.bricks | join (',') }}"
+    replicas: "{{ item.replicas|default(0) }}"
+    stripes: "{{ item.stripes|default(0) }}"
+    cluster: "{{ groups[storage_type+'_nodes'] }}"
+  when: inventory_hostname == groups['glusterfs_nodes'][0] 
+  with_items: "{{ glusterfs_volumes }}"
+
+- name: Enable gluster profile
+  command: gluster volume profile {{ item.name }} start
+  register: result
+  with_items: "{{ glusterfs_volumes }}"
+  when: inventory_hostname == groups['glusterfs_nodes'][0]
+  failed_when: result.stderr == "Profile on Volume item is already started"
