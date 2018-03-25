@@ -1,0 +1,29 @@
+---
+# tasks file for volume-create
+
+- name: Peer probe the nodes
+  glusterfs_peer:
+           state=present
+           nodes="{{ gluster_hosts }}"
+
+- name: Create a volume
+  glusterfs_volume:
+           state=present
+           volume="{{ volname }}"
+           bricks="{{ bricks }}"
+           hosts="{{ gluster_hosts }}"
+           transport="{{ transport }}"
+           replica_count="{{ replica_count }}"
+           arbiter_count="{{ arbiter_count }}"
+           disperse="{{ disperse }}"
+           disperse_count="{{ disperse_count }}"
+           redundancy_count="{{ redundancy_count }}"
+           force="{{ force | default('no') }}"
+
+- name: Start the volume if configured
+  glusterfs_volume:
+           state=started volume="{{ volname }}"
+           force="{{ force | default(False) }}"
+  register: result
+  failed_when: "result.rc != 0 and ('already started' not in result.msg)"
+  when: start is defined and start == 'yes'
