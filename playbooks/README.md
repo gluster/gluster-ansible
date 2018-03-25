@@ -1,5 +1,13 @@
-There is a playbook which has 2 separate plays
+There is a playbook which has 3 separate plays
 
-LVM play
+1. LVM
 
-Glusterfs play
+2. Filesystem
+
+3. Glusterfs
+
+Executing playbook:
+```
+ansible-playbook -u user -e storage_type="glusterfs" glusterfs-playbook.yml --tags=""
+```
+
