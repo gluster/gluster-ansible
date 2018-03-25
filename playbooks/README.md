@@ -10,3 +10,4 @@ Executing playbook:
 ```
 ansible-playbook -u user -e storage_type="glusterfs" glusterfs-playbook.yml --tags=""
 ```
+
