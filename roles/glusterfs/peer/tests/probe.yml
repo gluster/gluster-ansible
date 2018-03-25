@@ -1,0 +1,12 @@
+---
+- hosts: master
+  remote_user: root
+  gather_facts: no
+  vars:
+    gluster_hosts:
+      - 10.70.43.142
+      - 10.70.42.25
+    state: present
+
+  roles:
+    - ../../peer

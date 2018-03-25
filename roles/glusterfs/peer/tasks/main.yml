@@ -1,0 +1,8 @@
+---
+# tasks file for peer-probe
+
+- name: probe/detach a peer
+  glusterfs_peer:
+                state: "{{ state }}"
+                nodes: "{{ gluster_hosts }}"
+                force: "{{ force | default('') }}"

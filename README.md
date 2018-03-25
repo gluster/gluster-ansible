@@ -16,17 +16,23 @@ To contribute to the project, refer [Contributing](CONTRIBUTING.md).
 
 ## Roles
 
-**filesystem**
-
 
 **glusterfs**
 
+* [peer_probe]
+* [peer_detach]
+* [volume_create]
+* [volume_delete]
 
-**lvm-role**
+**system**
 
+* [backend_setup]
+* [backend_reset]
+* [glusterfs_vg]
 
 **cns-deploy**
 
+*
 
 **geo-replication**
 

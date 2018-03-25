@@ -1,0 +1,9 @@
+---
+- name: Shrink the Physical Volumes on all the nodes.
+  pv: state={{state}}
+      disk={{item.disk}}
+      setphysicalvolumesize={{item.setphysicalvolumesize}}
+  with_items:
+  - "{{ pvshrink_list }}"
+
+# tasks file for pvshrink

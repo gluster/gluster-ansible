@@ -1,0 +1,13 @@
+---
+# vars file for peer-probe
+# replace with the ip addresses needed to be probed
+
+# gluster_hosts:
+#     - 10.70.43.142
+#     - 10.70.42.25
+
+# state can be `present' or `absent'.
+# present - probe the peer
+# absent - detach the peer
+
+# state: present
