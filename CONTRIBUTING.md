@@ -11,7 +11,7 @@ Thank you for contributing to Gluster Ansible. This document explains how the re
 
 We have the following categories into one of which your Ansible role might fit into:
 
-* [gluster.infra](https://github.com/sac/gluster-ansible-infra)
+* [gluster.infra](https://github.com/gluster/gluster-ansible-infra)
 * gluster.cluster
 * gluster.features
 * gluster.repositories
