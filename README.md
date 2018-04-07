@@ -1,69 +1,22 @@
 # Gluster Ansible Roles
 
-This repository contains [Ansible](https://www.ansible.com/) roles and playbooks to install, deploy, and configure GlusterFS.
+gluster-ansible project provides [Ansible](https://www.ansible.com/) roles to deploy, configure, and maintain GlusterFS clusters.
 
-The primary uses of the roles is to:
+The goal of gluster-ansible is to develop roles which will enable the user to:
 
-* Create a GlusterFS cluster (Replicate, Distributed-Replicate, Arbiter, etc).
-* Configure GlusterFS usecases like NFS-Ganesha, Samba, Geo-Replication etc.
-* Tear down a GlusterFS cluster.
+* subscribe to repositories which provides GlusterFS and related packages and install the packages.
+* create a GlusterFS cluster (Replicate, Distributed-Replicate, Arbiter, etc).
+* configure GlusterFS to enable features like NFS-Ganesha, CTDB, Geo-Replication etc.
+* upgrade/downgrade the cluster
+* expand/shrink the cluster
 
-The roles are classified into categories and reside in sub-directories under directory roles/.
+The following roles are classified into following categories, which will have sub-roles (if necessary) for specific task, which will be explained in detail in their respective repositories.
 
-Any custom modules that do not fit to Ansible upstream can be placed under modules/ directory.
+* [gluster.infra](https://github.com/gluster/gluster-ansible-infra)
+* gluster.cluster
+* gluster.features
+* gluster.repositories
+* gluster.maintenance
 
 To contribute to the project, refer [Contributing](CONTRIBUTING.md).
 
-## Roles
-
-**filesystem**
-
-
-**glusterfs**
-
-
-**lvm-role**
-
-
-**cns-deploy**
-
-
-**geo-replication**
-
-* [georep_create]
-* [georep_delete]
-* [georep_pause]
-* [georep_resume]
-* [georep_start]
-* [georep_stop]
-
-**nfs-ganesha**
-
-* [nfs_ganesha_create]
-* [nfs_ganesha_destroy]
-* [nfs_ganesha_add_node]
-* [nfs_ganesha_del_node]
-* [nfs_ganesha_export_vol]
-* [nfs_ganesha_unexport_vol]
-* [nfs_ganesha_refresh_conf]
-
-**ctdb**
-
-* [ctdb_setup]
-* [ctdb_enable]
-* [ctdb_disable]
-* [ctdb_stop]
-* [ctdb_start]
-
-**quota**
-
-* [quota_enable]
-* [quota_disable]
-* [quota_remove]
-* [quota_remove_objects]
-* [quota_default_soft_limits]
-* [quota_limit_usage]
-* [quota_limit_objects]
-* [quota_alert_time]
-* [quota_soft_timeout]
-* [quota_hard_timeout]
