@@ -1,0 +1,15 @@
+---
+# tasks file for lvcreate
+- name: Create LVs with specified size for the VGs
+  lv: state={{state}}
+      lvtype="{{ item.lvtype }}"
+      lvname={{ item.lvname }}
+      vgname={{ item.vgname }}
+      size={{item.size}}
+      chunksize="{{ item.chunksize }}"
+      poolmetadatasize="{{ item.poolmetadatasize }}"
+      poolname={{ item.poolname }}
+      pvname="{{ item.pvname }}"
+      virtualsize={{item.virtualsize}}
+  with_items:
+  - "{{ lvcreate_list }}"

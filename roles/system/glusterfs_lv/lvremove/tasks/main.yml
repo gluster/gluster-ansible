@@ -1,0 +1,8 @@
+---
+# tasks file for lvremove
+- name: Remove logical volumes
+  lv: state={{state}}
+      vgname={{item.vgname}}
+      lvname={{item.lvname}}
+  with_items:
+  - "{{ lvremove_list }}"

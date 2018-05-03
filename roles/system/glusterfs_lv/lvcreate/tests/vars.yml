@@ -1,0 +1,27 @@
+---
+# vars file for lvcreate
+lvcreate_list:
+- "{{ lv1 }}"
+- "{{ lv2 }}"
+lv1:
+  state: create
+  lvtype: thinpool
+  size: 1G
+  lvname: lvol1
+  vgname: vg1
+  pvname: /dev/vdb
+  poolname: tp1
+  virtualsize: 9G
+  poolmetadatasize: 4k
+  chunksize: 128K
+lv2:
+  state: create
+  lvtype: thinpool
+  size: 1G
+  lvname: lvol1
+  vgname: vg2
+  pvname: /dev/vdc
+  poolname: tp2
+  virtualsize: 10G
+  poolmetadatasize: 4k
+  chunksize: 128K

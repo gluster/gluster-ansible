@@ -1,0 +1,11 @@
+---
+# tasks file for lvchange
+- name: Change the attributes of the logical volume
+  lv: state={{state}}
+      zero={{item.zero}}
+      vgname={{item.vgname}}
+      lvname={{item.lvname}}
+      errorwhenfull={{item.errorwhenfull}}
+      permission={{item.permission}}
+  with_items:
+  - "{{ lvchange_list}}"

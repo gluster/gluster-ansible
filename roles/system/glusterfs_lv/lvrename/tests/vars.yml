@@ -1,0 +1,15 @@
+---
+# vars file for lvrename
+lvrename_list:
+- "{{ lv1 }}"
+- "{{ lv2 }}"
+lv1:
+  state: rename
+  vgname: vg1
+  lvname: lvol1
+  new_name: lv1
+lv2:
+  state: rename
+  vgname: vg2
+  lvname: lvol1
+  new_name: lv2
