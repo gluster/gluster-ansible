@@ -1,0 +1,8 @@
+---
+# tasks file for volume-create
+
+- name: Delete a volume
+  glusterfs_volume:
+           state=absent
+           volume="{{ volname }}"
+           force="{{ force | default('no') }}"
