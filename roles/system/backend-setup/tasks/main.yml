@@ -1,0 +1,20 @@
+---
+# tasks file for backend-setup
+- name: Create Physical Volume
+  include_role:
+      name: glusterfs_pv/pvcreate
+
+- name: Create volume group on the disks
+  include_role:
+      name: glusterfs_vg/vgcreate
+
+- name: Create Logical Volume
+  include_role:
+      name: glusterfs_lv/lvcreate
+
+- name: Create an xfs filesystem
+  include_tasks: fscreate.yml
+
+- name: Mount the volumes
+  include_role:
+      name: glusterfs_mount
