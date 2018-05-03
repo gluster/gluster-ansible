@@ -1,0 +1,9 @@
+---
+# tasks file for georep-delete
+
+- name: Delete a geo-replication session
+  glusterfs_volume:
+           state=georep-delete
+           mastervol="{{ mastervol }}"
+           slavevol="{{ slavevol }}"
+           hosts="{{ gluster_hosts }}"

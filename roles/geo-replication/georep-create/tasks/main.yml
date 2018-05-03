@@ -1,0 +1,11 @@
+---
+# tasks file for georep-create
+
+- name: Create a geo-replication session
+  glusterfs_volume:
+           state=georep-create
+           mastervol="{{ mastervol }}"
+           slavevol="{{ slavevol }}"
+           hosts="{{ gluster_hosts }}"
+           force="{{ force | default('no') }}"
+           secure="{{ secure | default('no') }}"

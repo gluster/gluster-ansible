@@ -1,0 +1,7 @@
+---
+# defaults file for georep-delete
+state: georep-delete
+mastervol: mastervol
+slavevol: slavevol
+force: true
+secure: no
