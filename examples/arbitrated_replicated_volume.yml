@@ -1,0 +1,19 @@
+---
+- name: Create an arbitrated replicated volume
+  hosts: gluster_servers
+  remote_user: root
+  gather_facts: false
+
+  vars:
+    gluster_cluster_hosts:
+      - 10.70.41.212
+      - 10.70.42.156
+    gluster_cluster_volume: testvol
+    gluster_cluster_replica_count: 3
+    gluster_cluster_arbiter_count: 1
+    gluster_cluster_force: 'yes'
+    gluster_cluster_transport: 'tcp'
+    gluster_cluster_bricks: '/mnt/brick1/b1,/mnt/brick2/b2,/mnt/brick2/b1'
+
+  roles:
+    - gluster.volume
