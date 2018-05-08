@@ -1,0 +1,9 @@
+---
+# tasks file for glusterfs_snapshot_create
+- name: Creates a snapshot
+  snapshot:
+           state= snapshot-create
+           volume= "{{ volname }}"
+           options=no-timestamp
+           snapname= "{{ snapname }}"
+           force= "{{ force }}"

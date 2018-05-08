@@ -1,0 +1,7 @@
+---
+# defaults file for glusterfs_snapshot_create
+state= snapshot-create
+volname=10.70.46.13:glustervol
+options=no-timestamp
+snapname=glustersnap
+force=no

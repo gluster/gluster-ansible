@@ -1,0 +1,9 @@
+---
+# tasks file for glusterfs_snapshot_config
+- name: Configures a snapshot
+  snapshot:
+            state=snapshot-config
+            snap_max_soft_limit= "{{ snap_max_soft_limit }}"
+            snap_max_hard_limit= "{{ snap_max_hard_limit }}"
+            activate_on_create= "{{ activate_on_create }}"
+            auto_delete= "{{ auto_delete }}"

@@ -1,0 +1,4 @@
+---
+# defaults file for glusterfs_snapshot_restore
+state=snapshot-restore
+snapname=glustersnap

@@ -1,0 +1,7 @@
+---
+# defaults file for glusterfs_snapshot_config
+state=snapshot-config
+snap_max_soft_limit=90%
+snap_max_hard_limit=230
+activate_on_create=no
+auto_delete=disable

@@ -1,0 +1,5 @@
+---
+# defaults file for glusterfs_snapshot_activate
+state=snapshot-activate
+snapname=glustersnap
+force=no

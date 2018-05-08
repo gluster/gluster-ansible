@@ -1,0 +1,15 @@
+---
+# tasks file for glusterfs_snapshot_delete
+- name: Deactivates a snapshot
+  snapshot:
+            state=snapshot-deactivate
+            snapname= "{{ snapname }}"
+            force= "{{ force }}"
+  ignore_errors: yes
+
+- name: Deletes a snapshot
+  snapshot:
+            state=snapshot-delete
+            snapname= "{{ snapname }}"
+            volume= "{{ volname }}"
+            force= "{{ force }}"
