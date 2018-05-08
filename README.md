@@ -10,11 +10,11 @@ The goal of gluster-ansible is to develop roles which will enable the user to:
 * upgrade/downgrade the cluster
 * expand/shrink the cluster
 
-The following roles are classified into following categories, which will have sub-roles (if necessary) for specific task, which will be explained in detail in their respective repositories.
+The roles are classified into following categories, which will have sub-roles (if necessary) for specific task, which will be explained in detail in their respective repositories.
 
 * [gluster.infra](https://github.com/gluster/gluster-ansible-infra)
-* gluster.cluster
-* gluster.features
+* [gluster.cluster](https://github.com/gluster/gluster-ansible-cluster)
+* [gluster.features](https://github.com/gluster/gluster-ansible-features)
 * gluster.repositories
 * gluster.maintenance
 
