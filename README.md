@@ -12,9 +12,9 @@ The goal of gluster-ansible is to develop roles which will enable the user to:
 
 The roles are classified into following categories, which will have sub-roles (if necessary) for specific task, which will be explained in detail in their respective repositories.
 
-* [gluster.infra](https://github.com/gluster/gluster-ansible-infra)
-* [gluster.cluster](https://github.com/gluster/gluster-ansible-cluster)
-* [gluster.features](https://github.com/gluster/gluster-ansible-features)
+* [gluster.infra](https://github.com/gluster/gluster-ansible-infra) - helps the user to get started in deploying GlusterFS filesystem
+* [gluster.cluster](https://github.com/gluster/gluster-ansible-cluster) - helps the user to set up a GlusterFS cluster, manage gluster volumes and peer operations.
+* [gluster.features](https://github.com/gluster/gluster-ansible-features) - implements GlusterFS usecases: nfs_ganesha, gluster_hc, ctdb, geo_replication.
 * gluster.repositories
 * gluster.maintenance
 
