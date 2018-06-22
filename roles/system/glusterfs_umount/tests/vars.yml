@@ -1,0 +1,15 @@
+---
+#example vars file for glusterfs_umount
+umount_list:
+- "{{ umount1 }}"
+- "{{ umount2 }}"
+umount1:
+  path: /bricks/brick1
+  src: /dev/vg1/lvol1
+  fstype: xfs
+  state: absent
+umount2:
+  path: /bricks/brick2
+  src: /dev/vg2/lvol1
+  fstype: xfs
+  state: absent

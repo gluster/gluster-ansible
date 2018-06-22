@@ -1,0 +1,11 @@
+---
+# tasks file for glusterfs_umount
+- name: Unmount the volumes
+  gdeploy_mount:
+    path={{item.path}}
+    src={{item.src}}
+    fstype={{item.src}}
+    state={{item.state}}
+  # with_items: "{{ path }}"
+  with_items:
+  - "{{ umount_list}}"
