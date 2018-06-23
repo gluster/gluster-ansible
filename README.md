@@ -15,7 +15,7 @@ The roles are classified into following categories, which will have sub-roles (i
 * [gluster.infra](https://github.com/gluster/gluster-ansible-infra) - helps the user to get started in deploying GlusterFS filesystem
 * [gluster.cluster](https://github.com/gluster/gluster-ansible-cluster) - helps the user to set up a GlusterFS cluster, manage gluster volumes and peer operations.
 * [gluster.features](https://github.com/gluster/gluster-ansible-features) - implements GlusterFS usecases: nfs_ganesha, gluster_hc, ctdb, geo_replication.
-* gluster.repositories
+* [gluster.repositories](https://github.com/gluster/gluster-ansible-repositories) - helps user to register to RHSM and subscribe to repositories
 * gluster.maintenance
 
 To contribute to the project, refer [Contributing](CONTRIBUTING.md).
