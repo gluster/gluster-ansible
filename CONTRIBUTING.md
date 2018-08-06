@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for contributing to Gluster Ansible. This document explains how the repository is organized and how to submit contributions.
+Thank you for considering to contribute to Gluster Ansible. This document explains how the repository is organized and how to submit contributions.
 
 **Table of Contents**
 
@@ -17,7 +17,7 @@ We have the following categories into one of which your Ansible role might fit i
 * gluster.repositories
 * gluster.maintenance
 
-If it does not fit any of the above categories feel free to send a mail to gluster-devel@ we will be happy to discuss.
+If your proposed contribution does not align with any of the above categories feel free to send a mail to gluster-devel@ we will be happy to discuss.
 
 ## Submitting contributions
 
