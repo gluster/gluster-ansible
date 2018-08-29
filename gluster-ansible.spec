@@ -13,7 +13,9 @@ BuildArch: noarch
 Requires:  ansible >= 2.5
 Requires:  gluster-ansible-infra >= 0.1
 Requires:  gluster-ansible-features >= 0.1
-# Requires:  gluster-ansible-cluster >= 0.1
+Requires:  gluster-ansible-cluster >= 0.1
+Requires:  gluster-ansible-repositories >= 0.1
+Requires:  gluster-ansible-maintenance >= 0.1
 
 %description
 Collection of Ansible roles for the deploying and managing GlusterFS clusters.
