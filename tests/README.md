@@ -7,6 +7,8 @@ Here's how
 ### Install pre-requisites
 ```
 # yum install docker ansible
+# systemctl start docker
+
 ```
 
 You need to ensure `provision_docker` is installed under your tests directory
