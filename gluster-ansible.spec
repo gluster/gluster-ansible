@@ -1,7 +1,7 @@
 %global docdir %{_datadir}/doc/gluster.ansible
 
 Name:      gluster-ansible
-Version:   0.1
+Version:   0.2
 Release:   1%{?dist}
 Summary:   Ansible roles for GlusterFS deployment and management
 
@@ -10,7 +10,7 @@ Source0:   %{url}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
 License:   GPLv3
 BuildArch: noarch
 
-Requires:  ansible >= 2.5
+Requires:  ansible >= 2.6
 Requires:  gluster-ansible-infra >= 0.1
 Requires:  gluster-ansible-features >= 0.1
 Requires:  gluster-ansible-cluster >= 0.1
@@ -30,11 +30,14 @@ mkdir -p %{buildroot}/%{docdir}
 install -p -m 644 README.md %{buildroot}/%{docdir}
 
 %files
-%doc %{docdir}/README.md
+%doc %{docdir}
 
 %license LICENSE
 
 %changelog
+* Fri Aug 31 2018 Sachidananda Urs <sac@redhat.com> 0.2
+- Added gluster-maintenance. Bug fixes across the roles
+
 * Tue Apr 24 2018 Sachidananda Urs <sac@redhat.com> 0.1
 - Initial release.
 
