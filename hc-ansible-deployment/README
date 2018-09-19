@@ -1,0 +1,17 @@
+hc-ansible-deployment is end-to-end HC deployment playbook which is using both gluster-ansible role and ovirt-ansible-hosted-engine-setup role.
+1. There is one inventory file which is gluster_inventory.yml/gluster_inventory_vdo.yml has gluster related configurations
+2. The json file he_gluster_vars.json has Hosted-Engine related configurations for gluster.
+
+For new HC deployment both file need to be modified with accurate values like host,device,pvs,vgs,lvs,fqdn,passwords etc
+
+How to run:
+ > cd hc-ansible-deployment
+
+ With VDO:
+ > ansible-playbook -i gluster_inventory_vdo.yml hc_deployment.yml --extra-vars='@he_gluster_vars.json'
+
+ Without VDO:
+ > ansible-playbook -i gluster_inventory.yml test_deployment.yml --extra-vars='@he_gluster_vars.json'
+
+
+Note: Replace appropriate host name with host1,host2 and host3 in inventory file and json file.

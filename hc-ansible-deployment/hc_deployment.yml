@@ -1,0 +1,3 @@
+---
+- import_playbook: tasks/gluster_deployment.yml
+- import_playbook: tasks/he_deployment.yml

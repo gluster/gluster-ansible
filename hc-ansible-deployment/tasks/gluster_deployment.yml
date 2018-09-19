@@ -1,0 +1,11 @@
+---
+
+# Gluster deployment start here
+- name: Setup backend and deploy HCI
+  hosts: hc-nodes
+  remote_user: root
+  gather_facts: no
+
+  roles:
+     - gluster.infra
+     - gluster.features
