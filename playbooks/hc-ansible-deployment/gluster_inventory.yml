@@ -3,10 +3,16 @@ hc-nodes:
     # Host1
     host1:
 
+      # VDO config
+      # gluster_infra_vdo:
+      #    - { name: 'vdo_sdb1', device: '/dev/sdb1', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+
+      # gluster_infra_pvs: /dev/mapper/vdo_sdb1 # For VDO
+      gluster_infra_pvs: /dev/sdb1 # For Non-VDO
       # Stripe unit size always in KiB
       gluster_infra_stripe_unit_size: 256
       gluster_infra_lv_poolmetadatasize: 4G
-      gluster_infra_pvs: /dev/sdb1
       gluster_infra_vg_name: gluster_vg_sdb1
       gluster_infra_lv_thinpoolname: gluster_thinpool_sdb1
       #gluster_infra_lv_thinpoolsize: 100G # If not provided entire disk is used
@@ -32,10 +38,16 @@ hc-nodes:
     #Host2
     host2:
 
+      # VDO config
+      # gluster_infra_vdo:
+      #    - { name: 'vdo_sdb1', device: '/dev/sdb1', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+
+      # gluster_infra_pvs: /dev/mapper/vdo_sdb1 # For VDO
+      gluster_infra_pvs: /dev/sdb1 # For Non-VDO
       # Stripe unit size always in KiB
       gluster_infra_stripe_unit_size: 256
       gluster_infra_lv_poolmetadatasize: 4G
-      gluster_infra_pvs: /dev/sdb1
       gluster_infra_vg_name: gluster_vg_sdb1
       gluster_infra_lv_thinpoolname: gluster_thinpool_sdb1
       #gluster_infra_lv_thinpoolsize: 100G # If not provided entire disk is used
@@ -61,10 +73,16 @@ hc-nodes:
     #Host3
     host3:
 
+      # VDO config
+      # gluster_infra_vdo:
+      #    - { name: 'vdo_sdb1', device: '/dev/sdb1', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+
+      # gluster_infra_pvs: /dev/mapper/vdo_sdb1 # For VDO
+      gluster_infra_pvs: /dev/sdb1 # For Non-VDO
       # Stripe unit size always in KiB
       gluster_infra_stripe_unit_size: 256
       gluster_infra_lv_poolmetadatasize: 4G
-      gluster_infra_pvs: /dev/sdb1
       gluster_infra_vg_name: gluster_vg_sdb1
       gluster_infra_lv_thinpoolname: gluster_thinpool_sdb1
       #gluster_infra_lv_thinpoolsize: 100G # If not provided entire disk is used
