@@ -1,0 +1,45 @@
+---
+- name: Remove gluster setup
+  hosts: hc-nodes
+  tasks:
+    - name: Delete the volumes
+      shell: gluster volume stop {{ item.volname }} --mode=script;gluster volume delete {{ item.volname }} --mode=script
+      register: shell_output
+      changed_when: shell_output.rc == 0
+      failed_when: False
+      with_items:
+        - "{{ gluster_features_hci_volumes }}"
+      tags:
+        - delete_volumes
+
+    - name: Unmount and delete bricks
+      shell: umount {{ item.path }};e=$?; rm -rf  {{ item.path }};exit $e
+      register: shell_output
+      changed_when: shell_output.rc == 0
+      failed_when: False
+      with_items:
+        - "{{ gluster_infra_mount_devices }}"
+
+    - name: Wipe filesystem from LVs
+      shell: wipefs -a /dev/{{ gluster_infra_vg_name }}/gluster_lv_{{ item.volname }}
+      register: shell_output
+      changed_when: shell_output.rc == 0
+      failed_when: False
+      with_items:
+        - "{{ gluster_features_hci_volumes }}"
+
+    - name: Remove VG
+      shell: vgremove {{ gluster_infra_vg_name }} -f
+      register: shell_output
+      changed_when: shell_output.rc == 0
+      failed_when: False
+
+    - name: Remove VDO Volume
+      shell: vdo remove -n {{ item.name }}
+      register: shell_output
+      changed_when: shell_output.rc == 0
+      failed_when: False
+      with_items:
+        - "{{ gluster_infra_vdo }}"
+  tags:
+    - cleanup_bricks

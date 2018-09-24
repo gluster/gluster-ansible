@@ -1,0 +1,15 @@
+{
+  "he_appliance_password": "root-password-of-host",
+  "he_admin_password": "UI-password-for-login",
+  "he_domain_type": "glusterfs",
+  "he_fqdn": "FQDN-for-Hosted-Engine",
+  "he_vm_mac_addr": "Valid MAC address",
+  "he_default_gateway": "Valid Gateway",
+  "he_mgmt_network": "ovirtmgmt",
+  "he_host_name": "host1",
+  "he_storage_domain_name": "hosted_storage",
+  "he_storage_domain_path": "/engine",
+  "he_storage_domain_addr": "host1",
+  "he_mount_options": "backup-volfile-servers=host2:host3",
+  "he_bridge_if": "bridge name"
+}

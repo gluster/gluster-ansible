@@ -1,0 +1,46 @@
+---
+- name: Pre Installation Steps
+  hosts: localhost
+  connection: local
+  vars:
+    he_install_packages: true
+    he_pre_checks: true
+    he_initial_clean: true
+    he_bootstrap_local_vm: true
+  roles:
+    - role: oVirt.hosted-engine-setup
+
+- name: Bootstrap local vm
+  hosts: engine
+  vars:
+    he_bootstrap_local_vm_engine: true
+  roles:
+    - role: oVirt.hosted-engine-setup
+
+- name: Create target vm
+  hosts: localhost
+  connection: local
+  vars:
+    he_bootstrap_local_vm_add_host: true
+    he_create_storage_domain: true
+    he_create_target_vm: true
+  roles:
+    - role: oVirt.hosted-engine-setup
+
+- name: Configure vm
+  hosts: engine
+  vars:
+    he_engine_vm_configuration: true
+  roles:
+    - role: oVirt.hosted-engine-setup
+
+- name: Post Installation Steps
+  hosts: localhost
+  connection: local
+  vars:
+    he_final_tasks: true
+    he_final_clean: true
+  roles:
+    - role: oVirt.hosted-engine-setup
+
+- include: add_hosts_storage_domains.yml
