@@ -21,25 +21,44 @@
         - "{{ gluster_infra_mount_devices }}"
 
     - name: Wipe filesystem from LVs
-      shell: wipefs -a /dev/{{ gluster_infra_vg_name }}/gluster_lv_{{ item.volname }}
+      shell: wipefs -a /dev/{{ item.vgname }}/{{ item.lvname}}
       register: shell_output
       changed_when: shell_output.rc == 0
       failed_when: False
       with_items:
-        - "{{ gluster_features_hci_volumes }}"
+        - "{{ gluster_infra_mount_devices }}"
 
     - name: Remove VG
-      shell: vgremove {{ gluster_infra_vg_name }} -f
+      shell: vgremove {{ item.vgname }} -ff
       register: shell_output
       changed_when: shell_output.rc == 0
+      with_items: "{{ gluster_infra_volume_groups }}"
+      when: gluster_infra_volume_groups is defined
       failed_when: False
 
-    - name: Remove VDO Volume
+    - name: Remove PV
+      shell: pvremove {{ item.pvname }} -ff
+      register: shell_output
+      changed_when: shell_output.rc == 0
+      with_items: "{{ gluster_infra_volume_groups }}"
+      when: gluster_infra_volume_groups is defined
+      failed_when: False
+
+    - name: Remove Cache PV
+      shell: pvremove {{ item.cachedisk }} -ff
+      register: shell_output
+      changed_when: shell_output.rc == 0
+      with_items: "{{ gluster_infra_cache_vars }}"
+      when: gluster_infra_cache_vars is defined
+      failed_when: False
+
+    - name: Remove VDO
       shell: vdo remove -n {{ item.name }}
       register: shell_output
       changed_when: shell_output.rc == 0
       failed_when: False
       with_items:
         - "{{ gluster_infra_vdo }}"
+      when: gluster_infra_vdo is defined
   tags:
     - cleanup_bricks
