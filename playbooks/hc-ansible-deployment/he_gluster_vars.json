@@ -11,5 +11,6 @@
   "he_storage_domain_path": "/engine",
   "he_storage_domain_addr": "host1",
   "he_mount_options": "backup-volfile-servers=host2:host3",
-  "he_bridge_if": "bridge name"
+  "he_bridge_if": "bridge name",
+  "ovirt_repo_release_rpm": "http://resources.ovirt.org/pub/yum-repo/ovirt-release42-snapshot.rpm"
 }

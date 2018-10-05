@@ -1,5 +1,5 @@
 ---
-- name: Pre Installation Steps
+- name: Install packages and bootstrap local engine VM
   hosts: localhost
   connection: local
   vars:
@@ -7,17 +7,42 @@
     he_pre_checks: true
     he_initial_clean: true
     he_bootstrap_local_vm: true
+    ovirt_repositories_ovirt_release_rpm: "{{ ovirt_repo_release_rpm }}"
   roles:
+    - role: oVirt.repositories
     - role: oVirt.hosted-engine-setup
 
-- name: Bootstrap local vm
+- name: Local engine VM installation - Pre tasks
   hosts: engine
   vars:
-    he_bootstrap_local_vm_engine: true
+    he_bootstrap_pre_install_local_engine_vm: true
   roles:
     - role: oVirt.hosted-engine-setup
 
-- name: Create target vm
+- name: Engine Setup on local VM
+  hosts: engine
+  vars:
+    ovirt_engine_setup_hostname: "{{ he_fqdn.split('.')[0] }}"
+    ovirt_engine_setup_organization: "{{ he_cloud_init_domain_name }}"
+    ovirt_engine_setup_dwh_db_host: "{{ he_fqdn.split('.')[0] }}"
+    ovirt_engine_setup_firewall_manager: null
+    ovirt_engine_setup_answer_file_path: /root/ovirt-engine-answers
+    ovirt_engine_setup_use_remote_answer_file: True
+    ovirt_engine_setup_accept_defaults: True
+    ovirt_engine_setup_update_all_packages: false
+    ovirt_engine_setup_offline: true
+    ovirt_engine_setup_admin_password: "{{ he_admin_password }}"
+  roles:
+    - role: oVirt.engine-setup
+
+- name: Local engine VM installation - Post tasks
+  hosts: engine
+  vars:
+    he_bootstrap_post_install_local_engine_vm: true
+  roles:
+    - role: oVirt.hosted-engine-setup
+
+- name: Configure engine VM on a shared storage domain
   hosts: localhost
   connection: local
   vars:
@@ -27,14 +52,14 @@
   roles:
     - role: oVirt.hosted-engine-setup
 
-- name: Configure vm
+- name: Configure database settings
   hosts: engine
   vars:
     he_engine_vm_configuration: true
   roles:
     - role: oVirt.hosted-engine-setup
 
-- name: Post Installation Steps
+- name: Closeup
   hosts: localhost
   connection: local
   vars:
