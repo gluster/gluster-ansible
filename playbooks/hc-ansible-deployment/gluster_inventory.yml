@@ -67,13 +67,6 @@ hc-nodes:
          - { path: '/gluster_bricks/vmstore', vgname: vg_sdb2, lvname: gluster_lv_vmstore }
          - { path: '/gluster_bricks/engine', vgname: vg_sdb1, lvname: gluster_lv_engine }
 
-      # Set up GlusterFS hyperconverged interface
-      gluster_features_hci_cluster: "{{ groups['hc-nodes'] }}"
-      gluster_features_hci_volumes:
-         - { volname: 'engine', brick: '/gluster_bricks/engine/engine' }
-         - { volname: 'data', brick: '/gluster_bricks/data/data' }
-         - { volname: 'vmstore', brick: '/gluster_bricks/vmstore/vmstore' }
-
     #Host2
     host2:
 
@@ -140,13 +133,6 @@ hc-nodes:
          - { path: '/gluster_bricks/data', vgname: vg_sdb2, lvname: gluster_lv_data }
          - { path: '/gluster_bricks/vmstore', vgname: vg_sdb2, lvname: gluster_lv_vmstore }
          - { path: '/gluster_bricks/engine', vgname: vg_sdb1, lvname: gluster_lv_engine }
-
-      # Set up GlusterFS hyperconverged interface
-      gluster_features_hci_cluster: "{{ groups['hc-nodes'] }}"
-      gluster_features_hci_volumes:
-         - { volname: 'engine', brick: '/gluster_bricks/engine/engine' }
-         - { volname: 'data', brick: '/gluster_bricks/data/data' }
-         - { volname: 'vmstore', brick: '/gluster_bricks/vmstore/vmstore' }
 
     #Host3
     host3:
@@ -215,30 +201,34 @@ hc-nodes:
          - { path: '/gluster_bricks/vmstore', vgname: vg_sdb2, lvname: gluster_lv_vmstore }
          - { path: '/gluster_bricks/engine', vgname: vg_sdb1, lvname: gluster_lv_engine }
 
-      # Set up GlusterFS hyperconverged interface
-      gluster_features_hci_cluster: "{{ groups['hc-nodes'] }}"
-      gluster_features_hci_volumes:
-         - { volname: 'engine', brick: '/gluster_bricks/engine/engine' }
-         - { volname: 'data', brick: '/gluster_bricks/data/data' }
-         - { volname: 'vmstore', brick: '/gluster_bricks/vmstore/vmstore' }
-
-      # Common configurations
-      vars:
-        # Firewall setup
-        gluster_infra_fw_ports:
-           - 2049/tcp
-           - 54321/tcp
-           - 5900/tcp
-           - 5900-6923/tcp
-           - 5666/tcp
-           - 16514/tcp
-        gluster_infra_fw_permanent: true
-        gluster_infra_fw_state: enabled
-        gluster_infra_fw_zone: public
-        gluster_infra_fw_services:
-           - glusterfs
-        gluster_infra_disktype: RAID6
-        gluster_infra_diskcount: 12
+  # Common configurations
+  vars:
+    cluster_nodes:
+       - host1
+       - host2
+       - host3
+    gluster_features_hci_cluster: "{{ cluster_nodes }}"
+    # Set up GlusterFS hyperconverged interface
+    gluster_features_hci_volumes:
+       - { volname: 'engine', brick: '/gluster_bricks/engine/engine' }
+       - { volname: 'data', brick: '/gluster_bricks/data/data' }
+       - { volname: 'vmstore', brick: '/gluster_bricks/vmstore/vmstore' }
+    # Firewall setup
+    gluster_infra_fw_ports:
+       - 2049/tcp
+       - 54321/tcp
+       - 5900/tcp
+       - 5900-6923/tcp
+       - 5666/tcp
+       - 16514/tcp
+    gluster_infra_fw_permanent: true
+    gluster_infra_fw_state: enabled
+    gluster_infra_fw_zone: public
+    gluster_infra_fw_services:
+       - glusterfs
+    gluster_infra_disktype: RAID6
+    gluster_infra_diskcount: 12
+    gluster_infra_stripe_unit_size: 128
 
 ## Auto add hosts vars
 
