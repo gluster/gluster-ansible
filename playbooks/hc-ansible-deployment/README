@@ -14,3 +14,19 @@ For gluster deployment clean up:
  > ansible-playbook -i gluster_inventory.yml tasks/gluster_cleanup.yml
 
 Note: Replace appropriate host name with host1,host2 and host3 in inventory file and json file.
+ovirt_repo_release_rpm value should be particular release repo if you are installing role from ansible-galaxy
+Default is: http://resources.ovirt.org/pub/yum-repo/ovirt-release42-snapshot.rpm
+
+-> The below varables are required only when user wants to install pkgs using subscription-manager.
+"ovirt_repositories_ovirt_release_rpm": "http://resources.ovirt.org/pub/yum-repo/ovirt-master-release.rpm"
+"ovirt_repositories_use_subscription_manager": false,
+"ovirt_repositories_ovirt_version": 4.2,
+"ovirt_repositories_target_host": "host1",
+"ovirt_repositories_rh_username": "Username to use for subscription manager",
+"ovirt_repositories_rh_password": "Password to use for subscription manager",
+"ovirt_repositories_pool_ids": ["List of pools ids to subscribe to"],
+"ovirt_repositories_pools": ["List of subscription pool names"],
+"ovirt_repositories_repos_backup_path": "Directory to backup the original repositories configuration",
+"ovirt_repositories_force_register": false,
+"ovirt_repositories_rhsm_server_hostname": "Hostname of the RHSM server. By default it's used from rhsm configuration"
+ For more details please refer: https://github.com/oVirt/ovirt-ansible-repositories
