@@ -1,0 +1,10 @@
+gluster_volumes: testvol
+gluster_infra_reset_mnt_paths:
+  - /mnt/brick0
+  - /mnt/brick1
+gluster_infra_reset_volume_groups:
+  - vg_vdb
+  - vg_vdc
+gluster_infra_reset_vdos:
+  - foo_1
+  - foo_2

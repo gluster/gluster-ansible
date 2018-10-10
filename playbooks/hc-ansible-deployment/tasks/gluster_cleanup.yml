@@ -1,40 +1,47 @@
 ---
 - name: Remove gluster setup
   hosts: hc-nodes
+  remote_user: root
+  gather_facts: False
   tasks:
     - name: Delete the volumes
-      shell: gluster volume stop {{ item.volname }} --mode=script;gluster volume delete {{ item.volname }} --mode=script
-      register: shell_output
-      changed_when: shell_output.rc == 0
-      failed_when: False
-      with_items:
-        - "{{ vars['gluster_features_hci_volumes'] }}"
+      gluster_volume:
+        state: absent
+        name: "{{ item.volname }}"
+      run_once: True
+      with_items: "{{ gluster_features_hci_volumes }}"
+      when: gluster_features_hci_volumes is defined
       tags:
         - delete_volumes
 
-    - name: Unmount and delete bricks
-      shell: umount {{ item.path }};e=$?; rm -rf  {{ item.path }};exit $e
-      register: shell_output
-      changed_when: shell_output.rc == 0
-      failed_when: False
-      with_items:
-        - "{{ gluster_infra_mount_devices }}"
+    # Remove the brick directories
+    - name: Remove brick directories
+      file:
+        state: absent
+        path: "{{ item.brick }}"
+      with_items: "{{ gluster_features_hci_volumes }}"
+      when: gluster_features_hci_volumes is defined
+
+    - name: Unmount the disks
+      mount:
+        state: absent
+        path: "{{ item.path }}"
+      with_items: "{{ gluster_infra_mount_devices }}"
 
     - name: Wipe filesystem from LVs
       shell: wipefs -a /dev/{{ item.vgname }}/{{ item.lvname}}
       register: shell_output
       changed_when: shell_output.rc == 0
       failed_when: False
-      with_items:
-        - "{{ gluster_infra_mount_devices }}"
+      with_items: "{{ gluster_infra_mount_devices }}"
 
-    - name: Remove VG
-      shell: vgremove {{ item.vgname }} -ff
-      register: shell_output
-      changed_when: shell_output.rc == 0
+    - name: Delete volume groups
+      lvg:
+        vg: "{{ item.vgname }}"
+        state: absent
+        force: yes
       with_items: "{{ gluster_infra_volume_groups }}"
       when: gluster_infra_volume_groups is defined
-      failed_when: False
 
     - name: Remove PV
       shell: pvremove {{ item.pvname }} -ff
@@ -52,13 +59,13 @@
       when: gluster_infra_cache_vars is defined
       failed_when: False
 
-    - name: Remove VDO
-      shell: vdo remove -n {{ item.name }}
-      register: shell_output
-      changed_when: shell_output.rc == 0
-      failed_when: False
-      with_items:
-        - "{{ gluster_infra_vdo }}"
+    # Remove vdo devices if any
+    - name: Remove VDO devices
+      vdo:
+        name: "{{ item.name }}"
+        state: absent
+      with_items: "{{ gluster_infra_vdo }}"
       when: gluster_infra_vdo is defined
+
   tags:
     - cleanup_bricks
