@@ -5,6 +5,7 @@
   hosts: hc-nodes
   remote_user: root
   gather_facts: no
+  any_errors_fatal: true
 
   roles:
      - gluster.infra
