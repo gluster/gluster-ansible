@@ -1,7 +1,7 @@
 %global docdir %{_datadir}/doc/gluster.ansible
 
 Name:      gluster-ansible
-Version:   0.4
+Version:   0.5
 Release:   1
 Summary:   Ansible roles for GlusterFS deployment and management
 
@@ -14,7 +14,7 @@ Requires:  ansible >= 2.6
 Requires:  gluster-ansible-infra >= 0.3
 Requires:  gluster-ansible-features >= 0.3
 Requires:  gluster-ansible-cluster >= 0.1
-Requires:  gluster-ansible-repositories >= 0.1
+Requires:  gluster-ansible-repositories >= 0.2
 Requires:  gluster-ansible-maintenance >= 0.1
 
 %description
@@ -35,6 +35,9 @@ install -p -m 644 README.md %{buildroot}/%{docdir}
 %license LICENSE
 
 %changelog
+* Tue Oct 23 2018 Sachidananda Urs <sac@redhat.com> 0.5
+- Address the security concerns regarding plaintext passwords
+
 * Fri Oct 12 2018 Sachidnanda Urs <sac@redhat.com> 0.4
 - Enhancements to examples
 

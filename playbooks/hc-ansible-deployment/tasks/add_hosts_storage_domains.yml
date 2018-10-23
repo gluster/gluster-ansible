@@ -5,6 +5,7 @@
     authorized_key:
       user: root
       state: present
+      # The certificate has to be verified by the user for its authenticity
       key: https://{{ he_fqdn }}/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY
       validate_certs: False
     delegate_to: "{{ host }}"
