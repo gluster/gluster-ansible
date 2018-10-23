@@ -22,6 +22,7 @@
 
 - name: Engine Setup on local VM
   hosts: engine
+  no_log: True
   vars:
     ovirt_engine_setup_hostname: "{{ he_fqdn.split('.')[0] }}"
     ovirt_engine_setup_organization: "{{ he_cloud_init_domain_name }}"
@@ -32,6 +33,7 @@
     ovirt_engine_setup_accept_defaults: True
     ovirt_engine_setup_update_all_packages: false
     ovirt_engine_setup_offline: true
+    # Please ensure to encrypt `he_admin_password` variable using ansible-vault
     ovirt_engine_setup_admin_password: "{{ he_admin_password }}"
   roles:
     - role: oVirt.engine-setup
