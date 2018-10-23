@@ -1,5 +1,5 @@
 {
-  "he_appliance_password": "root-password-of-host",
+  "he_appliance_password": "encrypt-password-using-ansible-vault",
   "he_admin_password": "UI-password-for-login",
   "he_domain_type": "glusterfs",
   "he_fqdn": "FQDN-for-Hosted-Engine",
