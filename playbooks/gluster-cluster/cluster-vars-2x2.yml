@@ -1,5 +1,5 @@
 ---
-# Other supported disktypes are JBOD and RAID10
+# Other supported disktypes are RAID5, RAID10, and JBOD
 # https://github.com/gluster/gluster-ansible-infra#backend_setup documents the
 # variables.
 gluster_infra_disktype: RAID6
@@ -7,6 +7,7 @@ gluster_infra_diskcount: 12
 gluster_infra_stripe_unit_size: 128
 
 # The list has one item, if more disks are to be used, append to the list
+# See: https://github.com/gluster/gluster-ansible-infra#volume-groups-variable
 # In case of JBODS a volume group can be created using more than one disk, by
 # providing comma separated list of pvnames, see the module documentation and
 # example at:
