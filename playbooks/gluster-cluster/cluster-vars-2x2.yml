@@ -1,12 +1,29 @@
 ---
+# Other supported disktypes are JBOD and RAID10
+# https://github.com/gluster/gluster-ansible-infra#backend_setup documents the
+# variables.
 gluster_infra_disktype: RAID6
 gluster_infra_diskcount: 12
 gluster_infra_stripe_unit_size: 128
 
 # The list has one item, if more disks are to be used, append to the list
+# In case of JBODS a volume group can be created using more than one disk, by
+# providing comma separated list of pvnames, see the module documentation and
+# example at:
+# https://docs.ansible.com/ansible/2.5/modules/lvg_module.html#examples
 gluster_infra_volume_groups:
   - vgname: vg_vdb
     pvname: /dev/vdb
+
+# On poolmetadatasize
+# Internally, a thin pool contains a separate metadata device that is used to
+# track the (dynamically) allocated regions of the thin LVs and snapshots. The
+# poolmetadatasize option in the above command refers to the size of the pool
+# meta data device.
+# The maximum possible size for a metadata LV is 16 GiB. Gluster Storage
+# recommends creating the metadata device of the maximum supported size. You can
+# allocate less than the maximum if space is a concern, but in this case you
+# should allocate a minimum of 0.5% of the pool size.
 
 gluster_infra_thinpools:
   - vgname: 'vg_vdb'
