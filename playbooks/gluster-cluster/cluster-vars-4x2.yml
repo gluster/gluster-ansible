@@ -58,5 +58,9 @@ gluster_cluster_hosts: "{{ groups['all'] }}"
 gluster_cluster_volume: testvol
 gluster_cluster_transport: 'tcp'
 gluster_cluster_force: 'yes'
+# gluster_cluster_bricks variable should contain a comma separated directories
+# which will form the bricks for gluster cluster. See
+# https://docs.ansible.com/ansible/latest/modules/gluster_volume_module.html the
+# gluster_cluster_bricks maps to `bricks' variable in the module
 gluster_cluster_bricks: '/gluster_bricks1/testvol,/gluster_bricks2/testvol'
 gluster_cluster_replica_count: 2
