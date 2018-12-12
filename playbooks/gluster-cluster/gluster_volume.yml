@@ -5,7 +5,7 @@
   remote_user: root
   gather_facts: no
   vars_files:
-    - cluster-vars-2x2.yml
+    - cluster-vars.yml
 
   roles:
      - gluster.infra

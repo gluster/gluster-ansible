@@ -1,8 +1,8 @@
 This example shows how to deploy a Gluster cluster end-to-end.
 
 The cluster-vars.yml file contains variables for setting the backend disks using
-LVM thinpool and creating a Gluster volume. The example playbooks create a 2x2
-and 4x2 replicate volumes, but any volume type can be created.
+LVM thinpool and creating a Gluster volume. The example playbook creates a
+replica 2 volume with 4 bricks (2x2), but any volume type can be created.
 Please refer: https://github.com/gluster/gluster-ansible-cluster
 
 Usage:
