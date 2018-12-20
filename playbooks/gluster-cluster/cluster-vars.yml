@@ -1,0 +1,74 @@
+---
+# Other supported disktypes are RAID5, RAID10, and JBOD
+# https://github.com/gluster/gluster-ansible-infra#backend_setup documents the
+# variables.
+gluster_infra_disktype: RAID6
+gluster_infra_diskcount: 12
+gluster_infra_stripe_unit_size: 128
+
+# The list has one item, if more disks are to be used, append to the list
+# See: https://github.com/gluster/gluster-ansible-infra#volume-groups-variable
+# In case of JBODS a volume group can be created using more than one disk, by
+# providing comma separated list of pvnames, see the module documentation and
+# example at:
+# https://docs.ansible.com/ansible/2.5/modules/lvg_module.html#examples
+gluster_infra_volume_groups:
+  - vgname: vg_vdb
+    pvname: /dev/vdb
+
+# On poolmetadatasize
+# Internally, a thin pool contains a separate metadata device that is used to
+# track the (dynamically) allocated regions of the thin LVs and snapshots. The
+# poolmetadatasize option in the above command refers to the size of the pool
+# meta data device.
+# The maximum possible size for a metadata LV is 16 GiB. Gluster Storage
+# recommends creating the metadata device of the maximum supported size. You can
+# allocate less than the maximum if space is a concern, but in this case you
+# should allocate a minimum of 0.5% of the pool size.
+
+gluster_infra_thinpools:
+  - vgname: 'vg_vdb'
+    thinpoolname: 'thinpool_vg_vdb'
+    thinpoolsize: '45G'
+    poolmetadatasize: '1G'
+
+gluster_infra_lv_logicalvols:
+  - vgname: vg_vdb
+    thinpool: thinpool_vg_vdb
+    lvname: gluster_lv_disk1
+    lvsize: 200G
+
+# Mount the devices
+gluster_infra_mount_devices:
+  - { path: '/gluster_bricks', vgname: vg_vdb, lvname: gluster_lv_disk1 }
+
+
+gluster_infra_fw_ports:
+  - 2049/tcp
+  - 54321/tcp
+  - 5900/tcp
+  - 5900-6923/tcp
+  - 5666/tcp
+  - 16514/tcp
+gluster_infra_fw_permanent: true
+gluster_infra_fw_state: enabled
+gluster_infra_fw_zone: public
+gluster_infra_fw_services:
+  - glusterfs
+
+
+# Variable for creating a GlusterFS volume
+# groups['all'] tells to use the hosts mentioned in the inventory files to be
+# used in the cluster. If only a subset has to be used change the `all' to the
+# name of the section
+
+gluster_cluster_hosts: "{{ groups['all'] }}"
+gluster_cluster_volume: testvol
+gluster_cluster_transport: 'tcp'
+gluster_cluster_force: 'yes'
+# gluster_cluster_bricks variable should contain a comma separated directories
+# which will form the bricks for gluster cluster. See
+# https://docs.ansible.com/ansible/latest/modules/gluster_volume_module.html the
+# gluster_cluster_bricks maps to `bricks' variable in the module
+gluster_cluster_bricks: '/gluster_bricks/testvol'
+gluster_cluster_replica_count: 2

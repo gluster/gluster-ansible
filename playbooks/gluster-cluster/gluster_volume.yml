@@ -1,0 +1,12 @@
+---
+# Create a 2x2 gluster volume
+- name: Setup backend and create a GlusterFS cluster
+  hosts: all
+  remote_user: root
+  gather_facts: no
+  vars_files:
+    - cluster-vars.yml
+
+  roles:
+     - gluster.infra
+     - gluster.cluster
