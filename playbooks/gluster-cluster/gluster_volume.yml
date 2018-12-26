@@ -3,7 +3,7 @@
 - name: Setup backend and create a GlusterFS cluster
   hosts: all
   remote_user: root
-  gather_facts: no
+  gather_facts: true
   vars_files:
     - cluster-vars.yml
 

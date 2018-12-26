@@ -4,7 +4,7 @@
 - name: Setup backend and deploy HCI
   hosts: hc-nodes
   remote_user: root
-  gather_facts: no
+  gather_facts: true
   any_errors_fatal: true
 
   roles:
