@@ -9,5 +9,5 @@ Usage:
 To run the playbook create an inventory file containing the hosts in question.
 Edit the inventory file to suit your needs. And run the playbook:
 
-$ ansible-playbook -i path-to-inventory gluster_vol.yml
+$ ansible-playbook -i path-to-inventory gluster_volume.yml
 
