@@ -1,4 +1,4 @@
-hc-nodes:
+hc_nodes:
   hosts:
     # Host1
     host1:
