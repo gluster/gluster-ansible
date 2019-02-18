@@ -26,10 +26,10 @@
      public_key: true
      auth: "{{ ovirt_auth }}"
      hosted_engine: deploy
-    with_items: "{{ gluster.hosts }}"
+    with_items: "{{ groups['gluster'] }}"
     loop_control:
      loop_var: host
-    when: "gluster is defined and 'hosts' in gluster"
+    when: "'gluster' in groups"
 
   - name: "Add additional glusterfs storage domains"
     ignore_errors: true
@@ -42,7 +42,7 @@
         address: "{{ he_storage_domain_addr }}"
         mount_options: "{{ sd.mount_options }}"
         path: "{{ sd.path }}"
-    with_items: "{{ gluster.vars.storage_domains }}"
+    with_items: "{{ hostvars[groups['gluster'][0]]['storage_domains'] }}"
     loop_control:
       loop_var: sd
-    when: "gluster is defined and 'hosts' in gluster and 'vars' in gluster"
+    when: "'gluster' in groups"

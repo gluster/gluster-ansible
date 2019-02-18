@@ -4,4 +4,4 @@
   roles:
     - role: ovirt.hosted_engine_setup
 
-- include: add_hosts_storage_domains.yml
+- import_playbook: add_hosts_storage_domains.yml
