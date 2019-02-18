@@ -13,5 +13,6 @@
   "he_mount_options": "backup-volfile-servers=host2:host3",
   "he_bridge_if": "interface name for bridge creation",
   "he_enable_hc_gluster_service": true,
-  "he_mem_size_MB": "4096"
+  "he_mem_size_MB": "4096",
+  "he_cluster": "Default"
 }
