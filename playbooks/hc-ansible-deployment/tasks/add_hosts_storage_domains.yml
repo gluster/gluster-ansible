@@ -18,30 +18,30 @@
     async: 50
     poll: 0
     ignore_errors: true
-    ovirt_hosts:
-      cluster: Default
-      name: "{{ host }}"
-      address: "{{ host }}"
-      state: present
-      public_key: true
-      auth: "{{ ovirt_auth }}"
-      hosted_engine: deploy
+    ovirt_host:
+     cluster: "{{ he_cluster }}"
+     name: "{{ host }}"
+     address: "{{ host }}"
+     state: present
+     public_key: true
+     auth: "{{ ovirt_auth }}"
+     hosted_engine: deploy
     with_items: "{{ groups['gluster'] }}"
     loop_control:
-      loop_var: host
+     loop_var: host
     when: "'gluster' in groups"
 
   - name: "Add additional glusterfs storage domains"
     ignore_errors: true
-    ovirt_storage_domains:
-        name: "{{ sd.name }}"
-        host: "{{ he_host_name }}"
-        auth: "{{ ovirt_auth }}"
-        data_center: "{{ datacenter_name }}"
-        glusterfs:
-          address: "{{ he_storage_domain_addr }}"
-          mount_options: "{{ sd.mount_options }}"
-          path: "{{ sd.path }}"
+    ovirt_storage_domain:
+      name: "{{ sd.name }}"
+      host: "{{ he_host_name }}"
+      auth: "{{ ovirt_auth }}"
+      data_center: "{{ datacenter_name }}"
+      glusterfs:
+        address: "{{ he_storage_domain_addr }}"
+        mount_options: "{{ sd.mount_options }}"
+        path: "{{ sd.path }}"
     with_items: "{{ hostvars[groups['gluster'][0]]['storage_domains'] }}"
     loop_control:
       loop_var: sd

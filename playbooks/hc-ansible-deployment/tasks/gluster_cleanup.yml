@@ -1,8 +1,9 @@
 ---
 - name: Remove gluster setup
-  hosts: hc-nodes
+  hosts: hc_nodes
   remote_user: root
   gather_facts: False
+  ignore_errors: True
   tasks:
     - name: Delete the volumes
       gluster_volume:
