@@ -2,7 +2,7 @@
 
 # Gluster deployment start here
 - name: Setup backend and deploy HCI
-  hosts: hc-nodes
+  hosts: hc_nodes
   remote_user: root
   gather_facts: no
   any_errors_fatal: true
