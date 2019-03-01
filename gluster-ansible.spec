@@ -1,9 +1,10 @@
+%global rolesdir %{_sysconfdir}/ansible/roles/gluster.ansible
 %global docdir %{_datadir}/doc/gluster.ansible
-%global buildnum 1
+%global buildnum 2
 
 Name:      gluster-ansible-roles
 Version:   1.0.0
-Release:   1%{?dist}
+Release:   2%{?dist}
 Summary:   Ansible roles for GlusterFS deployment and management
 
 URL:       https://github.com/gluster/gluster-ansible
@@ -27,21 +28,25 @@ Collection of Ansible roles for the deploying and managing GlusterFS clusters.
 %build
 
 %install
+mkdir -p %{buildroot}/%{rolesdir}
+cp -a playbooks/ %{buildroot}/%{rolesdir}
+
 mkdir -p %{buildroot}/%{docdir}
-install -p -m 644 README.md %{buildroot}/%{docdir}
-cp -a playbooks/ %{buildroot}/%{docdir}
+install -p -m 644 README.md LICENSE %{buildroot}/%{docdir}
+
 
 %files
+%{rolesdir}
 %doc %{docdir}
 
 %license LICENSE
 
 %changelog
+* Fri Feb 22 2019 Sachidananda Urs <sac@redhat.com> 1.0.0-2
+- Update example playbooks to clean up failed deployments
+
 * Thu Feb 21 2019 Sachidananda Urs <sac@redhat.com> 1.0.0-1
 - Bump the version number, stable enought to call 1.0.0
-
-* Thu Jan 03 2019 Sachidananda Urs <sac@redhat.com> 0.6
-- Add documentation to /usr add new playbooks/ directory
 
 * Tue Oct 23 2018 Sachidananda Urs <sac@redhat.com> 0.5
 - Address the security concerns regarding plaintext passwords
