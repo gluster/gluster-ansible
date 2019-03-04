@@ -68,5 +68,10 @@
       with_items: "{{ gluster_infra_vdo }}"
       when: gluster_infra_vdo is defined
 
+    - name: Remove ansibleStatus file
+      file:
+        path: /usr/share/cockpit/ovirt-dashboard/ansible/ansibleStatus.conf
+        state: absent
+
   tags:
     - cleanup_bricks
