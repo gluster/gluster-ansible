@@ -73,5 +73,10 @@
         path: /usr/share/cockpit/ovirt-dashboard/ansible/ansibleStatus.conf
         state: absent
 
+    - name: Delete a node from the trusted storage pool
+      gluster_peer:
+        state: absent
+        nodes: "{{ cluster_nodes }}"
+
   tags:
     - cleanup_bricks
