@@ -74,9 +74,8 @@
         state: absent
 
     - name: Delete a node from the trusted storage pool
-      gluster_peer:
-        state: absent
-        nodes: "{{ cluster_nodes }}"
+      shell: gluster peer detach {{ item }} --mode=script
+      with_items: "{{ cluster_nodes }}"
 
   tags:
     - cleanup_bricks
