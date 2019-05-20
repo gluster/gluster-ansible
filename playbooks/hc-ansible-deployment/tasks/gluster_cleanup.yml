@@ -73,10 +73,16 @@
         path: /usr/share/cockpit/ovirt-dashboard/ansible/ansibleStatus.conf
         state: absent
 
+    - name: Get the list of hosts to be detached
+      shell: gluster pool list | egrep -vw '(localhost|Hostname)' | awk '{print $2}'
+      register: peernodes
+      run_once: true
+
     - name: Delete a node from the trusted storage pool
-      gluster_peer:
-        state: absent
-        nodes: "{{ cluster_nodes }}"
+      command: gluster peer detach {{ item }} --mode=script
+      with_items: "{{ cluster_nodes }}"
+      when: item != inventory_hostname and peernodes.stdout_lines|length > 0
+      run_once: true
 
   tags:
     - cleanup_bricks
