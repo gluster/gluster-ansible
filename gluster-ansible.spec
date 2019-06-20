@@ -1,10 +1,10 @@
 %global rolesdir %{_sysconfdir}/ansible/roles/gluster.ansible
 %global docdir %{_datadir}/doc/gluster.ansible
-%global buildnum 2
+%global buildnum 5
 
-Name:      gluster-ansible-roles
-Version:   1.0.0
-Release:   2%{?dist}
+Name:      gluster-ansible
+Version:   1.0.5
+Release:   5%{?dist}
 Summary:   Ansible roles for GlusterFS deployment and management
 
 URL:       https://github.com/gluster/gluster-ansible
@@ -13,11 +13,11 @@ License:   GPLv3
 BuildArch: noarch
 
 Requires:  ansible >= 2.6
-Requires:  gluster-ansible-infra >= 0.3
-Requires:  gluster-ansible-features >= 0.3
-Requires:  gluster-ansible-cluster >= 0.1
-Requires:  gluster-ansible-repositories >= 0.2
-Requires:  gluster-ansible-maintenance >= 0.1
+Requires:  gluster-ansible-infra >= 1.0
+Requires:  gluster-ansible-features >= 1.0
+Requires:  gluster-ansible-cluster >= 1.0
+Requires:  gluster-ansible-repositories >= 1.0
+Requires:  gluster-ansible-maintenance >= 1.0
 
 %description
 Collection of Ansible roles for the deploying and managing GlusterFS clusters.
@@ -42,6 +42,9 @@ install -p -m 644 README.md LICENSE %{buildroot}/%{docdir}
 %license LICENSE
 
 %changelog
+* Mon Mar 4 2019 Sachidananda Urs <sac@redhat.com> 1.0.4-5
+- Rename the package
+
 * Fri Feb 22 2019 Sachidananda Urs <sac@redhat.com> 1.0.0-2
 - Update example playbooks to clean up failed deployments
 
