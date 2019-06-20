@@ -7,6 +7,85 @@
   gather_facts: no
   any_errors_fatal: true
 
+  # We are moving some of the prerequisite checks from gluster.features role so
+  # that we fail early even before backend setup
+
+  pre_tasks:
+    # Check if the hosts have valid hostnames
+    - name: Check if valid hostnames are provided
+      command:
+      args:
+        argv:
+          - getent
+          - ahosts
+          - "{{ item }}"
+      register: result
+      with_items: "{{ groups['all'] }}"
+      when: gluster_features_fqdn_check | default(true)
+      delegate_to: localhost
+      run_once: true
+
+    - name: Check if provided hostnames are valid
+      assert:
+        that:
+          - "result.results[0]['rc'] == 0"
+          - "result.results[0]['stdout_lines'] > 0"
+        fail_msg: "The given hostname is not valid FQDN"
+      when: gluster_features_fqdn_check | default(true)
+
+    # Check if /var has enough disk. We check for 15G minimum.
+    - name: Check if /var/log has enough disk space
+      shell: df -m /var/log | awk '/[0-9]%/ {print $4}'
+      register: disk_size
+      when: gluster_features_force_varlogsizecheck | default(true)
+
+    - name: "Check if the /var is greater than 15G"
+      assert:
+        that:
+          - "disk_size.stdout|int > gluster_features_min_disk|default(15000)"
+        fail_msg: "The size of /var should be greater than or equal to 15G"
+      when: gluster_features_force_varlogsizecheck | default(true)
+
+    # logical block size of 512 bytes. To disable the check set
+    # gluster_features_512B_check to false. DELETE the below task once
+    # OVirt limitation is fixed
+    - name: Check if disks have logical block size of 512B
+      command: blockdev --getss {{ item.pvname }}
+      register: logical_blk_size
+      when: gluster_infra_volume_groups is defined and
+            item.pvname is not search("/dev/mapper") and
+            gluster_features_512B_check|default(true)
+      with_items: "{{ gluster_infra_volume_groups }}"
+
+    - name: Check if logical block size is 152 bytes
+      assert:
+        that:
+          - "item.stdout|int == 512"
+        fail_msg: "The logical block size of disk is not 512 bytes"
+      when: gluster_infra_volume_groups is defined and
+            gluster_features_512B_check|default(true)
+      loop: "{{ logical_blk_size.results }}"
+      loop_control:
+        label: "Logical Block Size"
+
+    - name: Check logical block size of VDO devices
+      command: blockdev --getss {{ item.device }}
+      register: logical_blk_size
+      when: gluster_infra_vdo is defined and
+            gluster_features_512B_check|default(true)
+      with_items: "{{ gluster_infra_vdo }}"
+
+    - name: Check if logical block size is 512 bytes
+      assert:
+        that:
+          - "item.stdout|int == 512"
+        fail_msg: "The logical block size of disk is not 512 bytes"
+      when: gluster_infra_vdo is defined and
+            gluster_features_512B_check|default(true)
+      loop: "{{ logical_blk_size.results }}"
+      loop_control:
+        label: "Logical Block Size"
+
   roles:
      - gluster.infra
      - gluster.features
