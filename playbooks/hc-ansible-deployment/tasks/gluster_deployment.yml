@@ -63,6 +63,7 @@
           - "item.stdout|int == 512"
         fail_msg: "The logical block size of disk is not 512 bytes"
       when: gluster_infra_volume_groups is defined and
+            item.stdout is defined and
             gluster_features_512B_check|default(true)
       loop: "{{ logical_blk_size.results }}"
       loop_control:
@@ -81,6 +82,7 @@
           - "item.stdout|int == 512"
         fail_msg: "The logical block size of disk is not 512 bytes"
       when: gluster_infra_vdo is defined and
+            item.stdout is defined and
             gluster_features_512B_check|default(true)
       loop: "{{ logical_blk_size.results }}"
       loop_control:
