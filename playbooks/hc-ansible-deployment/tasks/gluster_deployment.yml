@@ -57,7 +57,7 @@
             gluster_features_512B_check|default(true)
       with_items: "{{ gluster_infra_volume_groups }}"
 
-    - name: Check if logical block size is 152 bytes
+    - name: Check if logical block size is 512 bytes
       assert:
         that:
           - "item.stdout|int == 512"
