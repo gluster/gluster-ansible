@@ -32,6 +32,9 @@ hc_nodes:
         - path: /gluster_bricks/data
           lvname: gluster_lv_data
           vgname: vg_sdb2
+        - path: /gluster_bricks/data
+          lvname: gluster_lv_data
+          vgname: vg_sdb2
 
       gluster_infra_thinpools:
         - {vgname: 'vg_sdb2', thinpoolname: 'thinpool_vg_sdb2', thinpoolsize: '500G', poolmetadatasize: '4G'}
@@ -60,13 +63,12 @@ hc_nodes:
           thinpool: thinpool_vg_sdb2
           lvname: gluster_lv_vmstore
           lvsize: 200G
-
-      # Mount the devices
-      gluster_infra_mount_devices:
-         - { path: '/gluster_bricks/data', vgname: vg_sdb2, lvname: gluster_lv_data }
-         - { path: '/gluster_bricks/vmstore', vgname: vg_sdb2, lvname: gluster_lv_vmstore }
-         - { path: '/gluster_bricks/engine', vgname: vg_sdb1, lvname: gluster_lv_engine }
-
+        - vgname: vg_sdb2
+          thinpool: thinpool_vg_sdb2
+          lvname: gluster_lv_iso
+          lvsize: 10G
+        
+ 
     #Host2
     host2:
 
@@ -99,6 +101,9 @@ hc_nodes:
         - path: /gluster_bricks/data
           lvname: gluster_lv_data
           vgname: vg_sdb2
+        - path: /gluster_bricks/iso
+          lvname: gluster_lv_iso
+          vgname: vg_sdb2
 
       gluster_infra_thinpools:
         - {vgname: 'vg_sdb2', thinpoolname: 'thinpool_vg_sdb2', thinpoolsize: '500G', poolmetadatasize: '4G'}
@@ -127,13 +132,11 @@ hc_nodes:
           thinpool: thinpool_vg_sdb2
           lvname: gluster_lv_vmstore
           lvsize: 200G
-
-      # Mount the devices
-      gluster_infra_mount_devices:
-         - { path: '/gluster_bricks/data', vgname: vg_sdb2, lvname: gluster_lv_data }
-         - { path: '/gluster_bricks/vmstore', vgname: vg_sdb2, lvname: gluster_lv_vmstore }
-         - { path: '/gluster_bricks/engine', vgname: vg_sdb1, lvname: gluster_lv_engine }
-
+        - vgname: vg_sdb2
+          thinpool: thinpool_vg_sdb2
+          lvname: gluster_lv_iso
+          lvsize: 10G
+          
     #Host3
     host3:
 
@@ -166,6 +169,9 @@ hc_nodes:
         - path: /gluster_bricks/data
           lvname: gluster_lv_data
           vgname: vg_sdb2
+        - path: /gluster_bricks/iso
+          lvname: gluster_lv_iso
+          vgname: vg_sdb2
 
       gluster_infra_thinpools:
         - {vgname: 'vg_sdb2', thinpoolname: 'thinpool_vg_sdb2', thinpoolsize: '500G', poolmetadatasize: '4G'}
@@ -194,13 +200,12 @@ hc_nodes:
           thinpool: thinpool_vg_sdb2
           lvname: gluster_lv_vmstore
           lvsize: 200G
+        - vgname: vg_sdb2
+          thinpool: thinpool_vg_sdb2
+          lvname: gluster_lv_iso
+          lvsize: 10G
 
-      # Mount the devices
-      gluster_infra_mount_devices:
-         - { path: '/gluster_bricks/data', vgname: vg_sdb2, lvname: gluster_lv_data }
-         - { path: '/gluster_bricks/vmstore', vgname: vg_sdb2, lvname: gluster_lv_vmstore }
-         - { path: '/gluster_bricks/engine', vgname: vg_sdb1, lvname: gluster_lv_engine }
-
+      
   # Common configurations
   vars:
     cluster_nodes:
@@ -235,4 +240,7 @@ gluster:
   host2:
   host3:
  vars:
-  storage_domains: [{"name":"data","host":"host1","address":"host1","path":"/data","mount_options":"backup-volfile-servers=host2:host3"},{"name":"vmstore","host":"host1","address":"host1","path":"/vmstore","mount_options":"backup-volfile-servers=host2:host3"}]
+  storage_domains: 
+    - {"name":"data","host":"host1","address":"host1","path":"/data","function":"data","mount_options":"backup-volfile-servers=host2:host3"}
+    - {"name":"vmstore","host":"host1","address":"host1","path":"/vmstore","function":"data","mount_options":"backup-volfile-servers=host2:host3"}
+    - {"name":"iso","host":"host1","address":"host1","path":"/iso","function":"iso","mount_options":"backup-volfile-servers=host2:host3"}
