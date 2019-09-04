@@ -32,8 +32,8 @@ hc_nodes:
         - path: /gluster_bricks/data
           lvname: gluster_lv_data
           vgname: vg_sdb2
-        - path: /gluster_bricks/data
-          lvname: gluster_lv_data
+        - path: /gluster_bricks/iso
+          lvname: gluster_lv_iso
           vgname: vg_sdb2
 
       gluster_infra_thinpools:
