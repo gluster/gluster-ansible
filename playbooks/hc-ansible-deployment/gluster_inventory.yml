@@ -1,210 +1,288 @@
 hc_nodes:
   hosts:
-    # Host1
-    host1:
+     # Host1
+    <host1>:
+      # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
+      # required on that storage volume.
+      # The variables refers to:
+      # name        - VDO volume name to be used
+      # device      - Disk name on which VDO volume to created
+      # logicalsize - Logical size of the VDO volume.This value is 10 times 
+      #               the size of the physical disk  
+      # emulate512  - VDO device is made as 512e storage volume
+      # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
+      #               slabsize is 32G else slabsize is 2G
+      #
+      # Following VDO values are as per recommendation and treated as constants:
+      # blockmapcachesize - 128M
+      # readcache         - enabled
+      # readcachesize     - 20M
+      # writepolicy       - auto
+      #
+      # gluster_infra_vdo:
+      #   - { name: 'vdo_sdc', device: '/dev/sdc', logicalsize: '5000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
 
-      # Dedupe & Compression config
-      # If logicalsize >= 1000G then slabsize=32G else slabsize=2G
-      #gluster_infra_vdo:
-         #- { name: 'vdo_sdb1', device: '/dev/sdb1', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
-            #blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
-         #- { name: 'vdo_sdb2', device: '/dev/sdb2', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
-            #blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
-
-      # With Dedupe & Compression
-      #gluster_infra_volume_groups:
-        #- vgname: vg_sdb1
-          #pvname: /dev/mapper/vdo_sdb1
-        #- vgname: vg_sdb2
-          #pvname: /dev/mapper/vdo_sdb2
-
-      # Without Dedupe & Compression
+      # When dedupe and compression is enabled on the device, 
+      # use pvname for that device as '/dev/mapper/<vdo_device_name>
+      #
+      # The variables refers to:
+      # vgname - VG to be created on the disk
+      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc) 
       gluster_infra_volume_groups:
-        - vgname: vg_sdb1
-          pvname: /dev/sdb1
-        - vgname: vg_sdb2
-          pvname: /dev/sdb2
-
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+        - vgname: gluster_vg_sdc
+          pvname: /dev/sdc
+        - vgname: gluster_vg_sdd
+          pvname: /dev/sdd
+      
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
           lvname: gluster_lv_engine
-          vgname: vg_sdb1
+          vgname: gluster_vg_sdb
         - path: /gluster_bricks/data
           lvname: gluster_lv_data
-          vgname: vg_sdb2
-        - path: /gluster_bricks/iso
-          lvname: gluster_lv_iso
-          vgname: vg_sdb2
+          vgname: gluster_vg_sdc
+        - path: /gluster_bricks/vmstore
+          lvname: gluster_lv_vmstore
+          vgname: gluster_vg_sdd
 
+      # 'thinpoolsize' is the sum of sizes of all LVs to be created on that VG
+      # In the case of VDO enabled, 'thinpoolsize' is 10 times the sum of sizes
+      # of all LVs to be created on that VG. Recommended values for 
+      # 'poolmetadatasize' is 16GB and that should be considered exclusive of
+      # 'thinpoolsize'
       gluster_infra_thinpools:
-        - {vgname: 'vg_sdb2', thinpoolname: 'thinpool_vg_sdb2', thinpoolsize: '500G', poolmetadatasize: '4G'}
+        - {vgname: 'gluster_vg_sdc', thinpoolname: 'gluster_thinpool_sdc', thinpoolsize: '500G', poolmetadatasize: '16G'}
+        - {vgname: 'gluster_vg_sdd', thinpoolname: 'gluster_thinpool_sdd', thinpoolsize: '500G', poolmetadatasize: '16G'}
 
-      gluster_infra_cache_vars:
-        - vgname: vg_sdb2
-          cachedisk: /dev/sdb3
-          cachelvname: cachelv_thinpool_vg_sdb2
-          cachethinpoolname: thinpool_vg_sdb2
-          cachelvsize: '10G'
-          cachemetalvsize: '2G'
-          cachemetalvname: cache_thinpool_vg_sdb2
-          cachemode: writethrough
+      # Enable the following section if LVM cache is to enabled
+      # Following are the variables:
+      # vgname            - VG with the slow HDD device that needs caching
+      # cachedisk         - Comma separate value of slow HDD and fast SSD
+      #                     In this example, /dev/sdb is the slow HDD, /dev/sde is fast SSD
+      # cachelvname       - LV cache name
+      # cachethinpoolname - Thinpool to which the fast SSD to be attached
+      # cachelvsize       - Size of cache data LV. This is the SSD_size - (1/1000) of SSD_size
+      #                     1/1000th of SSD space will be used by cache LV meta
+      # cachemode         - writethrough or writeback
+      # gluster_infra_cache_vars:
+      #  - vgname: gluster_vg_sdb
+      #    cachedisk: /dev/sdb,/dev/sde
+      #    cachelvname: cachelv_thinpool_sdb
+      #    cachethinpoolname: gluster_thinpool_sdb
+      #    cachelvsize: '250G'
+      #    cachemode: writethrough
 
+      # Only the engine brick needs to be thickly provisioned
+      # Engine brick requires 100GB of disk space
       gluster_infra_thick_lvs:
-        - vgname: vg_sdb1
+        - vgname: gluster_vg_sdb
           lvname: gluster_lv_engine
           size: 100G
 
       gluster_infra_lv_logicalvols:
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
+        - vgname: gluster_vg_sdc
+          thinpool: gluster_thinpool_sdc
           lvname: gluster_lv_data
           lvsize: 200G
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
+        - vgname: gluster_vg_sdd
+          thinpool: gluster_thinpool_sdd
           lvname: gluster_lv_vmstore
           lvsize: 200G
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
-          lvname: gluster_lv_iso
-          lvsize: 10G
         
- 
     #Host2
-    host2:
+    <host2>:
 
-      # Dedupe & Compression config
-      # If logicalsize >= 1000G then slabsize=32G else slabsize=2G
-      #gluster_infra_vdo:
-         #- { name: 'vdo_sdb1', device: '/dev/sdb1', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
-            #blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
-         #- { name: 'vdo_sdb2', device: '/dev/sdb2', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
-            #blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
+      # required on that storage volume.
+      # The variables refers to:
+      # name        - VDO volume name to be used
+      # device      - Disk name on which VDO volume to created
+      # logicalsize - Logical size of the VDO volume.This value is 10 times 
+      #               the size of the physical disk  
+      # emulate512  - VDO device is made as 512e storage volume
+      # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
+      #               slabsize is 32G else slabsize is 2G
+      #
+      # Following VDO values are as per recommendation and treated as constants:
+      # blockmapcachesize - 128M
+      # readcache         - enabled
+      # readcachesize     - 20M
+      # writepolicy       - auto
+      #
+      # gluster_infra_vdo:
+      #   - { name: 'vdo_sdc', device: '/dev/sdc', logicalsize: '5000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
 
-      # With Dedupe & Compression
-      #gluster_infra_volume_groups:
-        #- vgname: vg_sdb1
-          #pvname: /dev/mapper/vdo_sdb1
-        #- vgname: vg_sdb2
-          #pvname: /dev/mapper/vdo_sdb2
-
-      # Without Dedupe & Compression
+      # When dedupe and compression is enabled on the device, 
+      # use pvname for that device as '/dev/mapper/<vdo_device_name>
+      #
+      # The variables refers to:
+      # vgname - VG to be created on the disk
+      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc) 
       gluster_infra_volume_groups:
-        - vgname: vg_sdb1
-          pvname: /dev/sdb1
-        - vgname: vg_sdb2
-          pvname: /dev/sdb2
-
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+        - vgname: gluster_vg_sdc
+          pvname: /dev/sdc
+        - vgname: gluster_vg_sdd
+          pvname: /dev/sdd
+      
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
           lvname: gluster_lv_engine
-          vgname: vg_sdb1
+          vgname: gluster_vg_sdb
         - path: /gluster_bricks/data
           lvname: gluster_lv_data
-          vgname: vg_sdb2
-        - path: /gluster_bricks/iso
-          lvname: gluster_lv_iso
-          vgname: vg_sdb2
+          vgname: gluster_vg_sdc
+        - path: /gluster_bricks/vmstore
+          lvname: gluster_lv_vmstore
+          vgname: gluster_vg_sdd
 
+      # 'thinpoolsize' is the sum of sizes of all LVs to be created on that VG
+      # In the case of VDO enabled, 'thinpoolsize' is 10 times the sum of sizes
+      # of all LVs to be created on that VG. Recommended values for 
+      # 'poolmetadatasize' is 16GB and that should be considered exclusive of
+      # 'thinpoolsize'
       gluster_infra_thinpools:
-        - {vgname: 'vg_sdb2', thinpoolname: 'thinpool_vg_sdb2', thinpoolsize: '500G', poolmetadatasize: '4G'}
+        - {vgname: 'gluster_vg_sdc', thinpoolname: 'gluster_thinpool_sdc', thinpoolsize: '500G', poolmetadatasize: '16G'}
+        - {vgname: 'gluster_vg_sdd', thinpoolname: 'gluster_thinpool_sdd', thinpoolsize: '500G', poolmetadatasize: '16G'}
 
-      gluster_infra_cache_vars:
-        - vgname: vg_sdb2
-          cachedisk: /dev/sdb3
-          cachelvname: cachelv_thinpool_vg_sdb2
-          cachethinpoolname: thinpool_vg_sdb2
-          cachelvsize: '10G'
-          cachemetalvsize: '2G'
-          cachemetalvname: cache_thinpool_vg_sdb2
-          cachemode: writethrough
+      # Enable the following section if LVM cache is to enabled
+      # Following are the variables:
+      # vgname            - VG with the slow HDD device that needs caching
+      # cachedisk         - Comma separate value of slow HDD and fast SSD
+      #                     In this example, /dev/sdb is the slow HDD, /dev/sde is fast SSD
+      # cachelvname       - LV cache name
+      # cachethinpoolname - Thinpool to which the fast SSD to be attached
+      # cachelvsize       - Size of cache data LV. This is the SSD_size - (1/1000) of SSD_size
+      #                     1/1000th of SSD space will be used by cache LV meta
+      # cachemode         - writethrough or writeback
+      # gluster_infra_cache_vars:
+      #  - vgname: gluster_vg_sdb
+      #    cachedisk: /dev/sdb,/dev/sde
+      #    cachelvname: cachelv_thinpool_sdb
+      #    cachethinpoolname: gluster_thinpool_sdb
+      #    cachelvsize: '250G'
+      #    cachemode: writethrough
 
+      # Only the engine brick needs to be thickly provisioned
+      # Engine brick requires 100GB of disk space
       gluster_infra_thick_lvs:
-        - vgname: vg_sdb1
+        - vgname: gluster_vg_sdb
           lvname: gluster_lv_engine
           size: 100G
 
       gluster_infra_lv_logicalvols:
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
+        - vgname: gluster_vg_sdc
+          thinpool: gluster_thinpool_sdc
           lvname: gluster_lv_data
           lvsize: 200G
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
+        - vgname: gluster_vg_sdd
+          thinpool: gluster_thinpool_sdd
           lvname: gluster_lv_vmstore
           lvsize: 200G
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
-          lvname: gluster_lv_iso
-          lvsize: 10G
-          
+
     #Host3
-    host3:
+    <host3>:
 
-      # Dedupe & Compression config
-      # If logicalsize >= 1000G then slabsize=32G else slabsize=2G
-      #gluster_infra_vdo:
-         #- { name: 'vdo_sdb1', device: '/dev/sdb1', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
-            #blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
-         #- { name: 'vdo_sdb2', device: '/dev/sdb2', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
-            #blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
-
-      # With Dedupe & Compression
-      #gluster_infra_volume_groups:
-        #- vgname: vg_sdb1
-          #pvname: /dev/mapper/vdo_sdb1
-        #- vgname: vg_sdb2
-          #pvname: /dev/mapper/vdo_sdb2
-
-      # Without Dedupe & Compression
+      # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
+      # required on that storage volume.
+      # The variables refers to:
+      # name        - VDO volume name to be used
+      # device      - Disk name on which VDO volume to created
+      # logicalsize - Logical size of the VDO volume.This value is 10 times 
+      #               the size of the physical disk  
+      # emulate512  - VDO device is made as 512e storage volume
+      # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
+      #               slabsize is 32G else slabsize is 2G
+      #
+      # Following VDO values are as per recommendation and treated as constants:
+      # blockmapcachesize - 128M
+      # readcache         - enabled
+      # readcachesize     - 20M
+      # writepolicy       - auto
+      #
+      # gluster_infra_vdo:
+      #   - { name: 'vdo_sdc', device: '/dev/sdc', logicalsize: '5000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'on', slabsize: '32G',
+      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+ 
+      # When dedupe and compression is enabled on the device, 
+      # use pvname for that device as '/dev/mapper/<vdo_device_name>
+      #
+      # The variables refers to:
+      # vgname - VG to be created on the disk
+      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc) 
       gluster_infra_volume_groups:
-        - vgname: vg_sdb1
-          pvname: /dev/sdb1
-        - vgname: vg_sdb2
-          pvname: /dev/sdb2
-
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+        - vgname: gluster_vg_sdc
+          pvname: /dev/sdc
+        - vgname: gluster_vg_sdd
+          pvname: /dev/sdd
+      
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
           lvname: gluster_lv_engine
-          vgname: vg_sdb1
+          vgname: gluster_vg_sdb
         - path: /gluster_bricks/data
           lvname: gluster_lv_data
-          vgname: vg_sdb2
-        - path: /gluster_bricks/iso
-          lvname: gluster_lv_iso
-          vgname: vg_sdb2
+          vgname: gluster_vg_sdc
+        - path: /gluster_bricks/vmstore
+          lvname: gluster_lv_vmstore
+          vgname: gluster_vg_sdd
 
+      # 'thinpoolsize' is the sum of sizes of all LVs to be created on that VG
+      # In the case of VDO enabled, 'thinpoolsize' is 10 times the sum of sizes
+      # of all LVs to be created on that VG. Recommended values for 
+      # 'poolmetadatasize' is 16GB and that should be considered exclusive of
+      # 'thinpoolsize'
       gluster_infra_thinpools:
-        - {vgname: 'vg_sdb2', thinpoolname: 'thinpool_vg_sdb2', thinpoolsize: '500G', poolmetadatasize: '4G'}
+        - {vgname: 'gluster_vg_sdc', thinpoolname: 'gluster_thinpool_sdc', thinpoolsize: '500G', poolmetadatasize: '16G'}
+        - {vgname: 'gluster_vg_sdd', thinpoolname: 'gluster_thinpool_sdd', thinpoolsize: '500G', poolmetadatasize: '16G'}
 
-      gluster_infra_cache_vars:
-        - vgname: vg_sdb2
-          cachedisk: /dev/sdb3
-          cachelvname: cachelv_thinpool_vg_sdb2
-          cachethinpoolname: thinpool_vg_sdb2
-          cachelvsize: '10G'
-          cachemetalvsize: '2G'
-          cachemetalvname: cache_thinpool_vg_sdb2
-          cachemode: writethrough
+      # Enable the following section if LVM cache is to enabled
+      # Following are the variables:
+      # vgname            - VG with the slow HDD device that needs caching
+      # cachedisk         - Comma separate value of slow HDD and fast SSD
+      #                     In this example, /dev/sdb is the slow HDD, /dev/sde is fast SSD
+      # cachelvname       - LV cache name
+      # cachethinpoolname - Thinpool to which the fast SSD to be attached
+      # cachelvsize       - Size of cache data LV. This is the SSD_size - (1/1000) of SSD_size
+      #                     1/1000th of SSD space will be used by cache LV meta
+      # cachemode         - writethrough or writeback
+      # gluster_infra_cache_vars:
+      #  - vgname: gluster_vg_sdb
+      #    cachedisk: /dev/sdb,/dev/sde
+      #    cachelvname: cachelv_thinpool_sdb
+      #    cachethinpoolname: gluster_thinpool_sdb
+      #    cachelvsize: '250G'
+      #    cachemode: writethrough
 
+      # Only the engine brick needs to be thickly provisioned
+      # Engine brick requires 100GB of disk space
       gluster_infra_thick_lvs:
-        - vgname: vg_sdb1
+        - vgname: gluster_vg_sdb
           lvname: gluster_lv_engine
           size: 100G
 
       gluster_infra_lv_logicalvols:
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
+        - vgname: gluster_vg_sdc
+          thinpool: gluster_thinpool_sdc
           lvname: gluster_lv_data
           lvsize: 200G
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
+        - vgname: gluster_vg_sdd
+          thinpool: gluster_thinpool_sdd
           lvname: gluster_lv_vmstore
           lvsize: 200G
-        - vgname: vg_sdb2
-          thinpool: thinpool_vg_sdb2
-          lvname: gluster_lv_iso
-          lvsize: 10G
-
       
   # Common configurations
   vars:
@@ -215,14 +293,22 @@ hc_nodes:
     gluster_features_hci_cluster: "{{ cluster_nodes }}"
     # Set up GlusterFS hyperconverged interface
     gluster_features_hci_volumes:
-       - { volname: 'engine', brick: '/gluster_bricks/engine/engine' }
-       - { volname: 'data', brick: '/gluster_bricks/data/data' }
-       - { volname: 'vmstore', brick: '/gluster_bricks/vmstore/vmstore' }
+      - volname: engine
+        brick: /gluster_bricks/engine/engine
+        arbiter: 0
+      - volname: data
+        brick: /gluster_bricks/data/data
+        arbiter: 0
+      - volname: vmstore
+        brick: /gluster_bricks/vmstore/vmstore
+        arbiter: 0
     # Firewall setup
     gluster_infra_fw_ports:
        - 2049/tcp
        - 54321/tcp
        - 5900-6923/tcp
+       - 16514/tcp
+       - 5666/tcp
        - 16514/tcp
     gluster_infra_fw_permanent: true
     gluster_infra_fw_state: enabled
@@ -230,11 +316,12 @@ hc_nodes:
     gluster_infra_fw_services:
        - glusterfs
     gluster_infra_disktype: RAID6
-    gluster_infra_diskcount: 12
-    gluster_infra_stripe_unit_size: 128
+    gluster_infra_diskcount: 10
+    gluster_infra_stripe_unit_size: 256
+    gluster_features_force_varlogsizecheck: false
+    gluster_set_selinux_labels: true
 
 ## Auto add hosts vars
-
 gluster:
  hosts:
   host2:
@@ -243,4 +330,3 @@ gluster:
   storage_domains: 
     - {"name":"data","host":"host1","address":"host1","path":"/data","function":"data","mount_options":"backup-volfile-servers=host2:host3"}
     - {"name":"vmstore","host":"host1","address":"host1","path":"/vmstore","function":"data","mount_options":"backup-volfile-servers=host2:host3"}
-    - {"name":"iso","host":"host1","address":"host1","path":"/iso","function":"iso","mount_options":"backup-volfile-servers=host2:host3"}
