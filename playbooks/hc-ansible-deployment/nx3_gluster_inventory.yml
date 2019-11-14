@@ -52,6 +52,7 @@ hc_nodes:
       gluster_infra_thinpools:
         - vgname: gluster_vg_sdb
           thinpoolname: gluster_thinpool_gluster_vg_sdb
+          thinpoolsize: 100G
           poolmetadatasize: 1G
       gluster_infra_lv_logicalvols:
         - vgname: gluster_vg_sdb
@@ -77,6 +78,7 @@ hc_nodes:
       gluster_infra_thinpools:
         - vgname: gluster_vg_sdb
           thinpoolname: gluster_thinpool_gluster_vg_sdb
+          thinpoolsize: 100G
           poolmetadatasize: 1G
       gluster_infra_lv_logicalvols:
         - vgname: gluster_vg_sdb
@@ -102,6 +104,7 @@ hc_nodes:
       gluster_infra_thinpools:
         - vgname: gluster_vg_sdb
           thinpoolname: gluster_thinpool_gluster_vg_sdb
+          thinpoolsize: 100G
           poolmetadatasize: 1G
       gluster_infra_lv_logicalvols:
         - vgname: gluster_vg_sdb
