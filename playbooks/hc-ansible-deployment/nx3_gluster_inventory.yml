@@ -1,0 +1,167 @@
+hc_nodes:
+  hosts:
+    host1:
+      gluster_infra_volume_groups:
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+      gluster_infra_mount_devices:
+        - path: /gluster_bricks/engine
+          lvname: gluster_lv_engine
+          vgname: gluster_vg_sdb
+      gluster_infra_thick_lvs:
+        - vgname: gluster_vg_sdb
+          lvname: gluster_lv_engine
+          size: 10G
+    host2:
+      gluster_infra_volume_groups:
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+      gluster_infra_mount_devices:
+        - path: /gluster_bricks/engine
+          lvname: gluster_lv_engine
+          vgname: gluster_vg_sdb
+      gluster_infra_thick_lvs:
+        - vgname: gluster_vg_sdb
+          lvname: gluster_lv_engine
+          size: 10G
+
+    host3:
+      gluster_infra_volume_groups:
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+      gluster_infra_mount_devices:
+        - path: /gluster_bricks/engine
+          lvname: gluster_lv_engine
+          vgname: gluster_vg_sdb
+      gluster_infra_thick_lvs:
+        - vgname: gluster_vg_sdb
+          lvname: gluster_lv_engine
+          size: 10G
+
+    host4:
+      gluster_infra_volume_groups:
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+      gluster_infra_mount_devices:
+        - path: /gluster_bricks/data
+          lvname: gluster_lv_data
+          vgname: gluster_vg_sdb
+        - path: /gluster_bricks/vmstore
+          lvname: gluster_lv_vmstore
+          vgname: gluster_vg_sdb
+      gluster_infra_thinpools:
+        - vgname: gluster_vg_sdb
+          thinpoolname: gluster_thinpool_gluster_vg_sdb
+          thinpoolsize: 100G
+          poolmetadatasize: 1G
+      gluster_infra_lv_logicalvols:
+        - vgname: gluster_vg_sdb
+          thinpool: gluster_thinpool_gluster_vg_sdb
+          lvname: gluster_lv_data
+          lvsize: 10G
+        - vgname: gluster_vg_sdb
+          thinpool: gluster_thinpool_gluster_vg_sdb
+          lvname: gluster_lv_vmstore
+          lvsize: 10G
+
+    host5:
+      gluster_infra_volume_groups:
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+      gluster_infra_mount_devices:
+        - path: /gluster_bricks/data
+          lvname: gluster_lv_data
+          vgname: gluster_vg_sdb
+        - path: /gluster_bricks/vmstore
+          lvname: gluster_lv_vmstore
+          vgname: gluster_vg_sdb
+      gluster_infra_thinpools:
+        - vgname: gluster_vg_sdb
+          thinpoolname: gluster_thinpool_gluster_vg_sdb
+          thinpoolsize: 100G
+          poolmetadatasize: 1G
+      gluster_infra_lv_logicalvols:
+        - vgname: gluster_vg_sdb
+          thinpool: gluster_thinpool_gluster_vg_sdb
+          lvname: gluster_lv_data
+          lvsize: 10G
+        - vgname: gluster_vg_sdb
+          thinpool: gluster_thinpool_gluster_vg_sdb
+          lvname: gluster_lv_vmstore
+          lvsize: 10G
+
+    host6:
+      gluster_infra_volume_groups:
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+      gluster_infra_mount_devices:
+        - path: /gluster_bricks/data
+          lvname: gluster_lv_data
+          vgname: gluster_vg_sdb
+        - path: /gluster_bricks/vmstore
+          lvname: gluster_lv_vmstore
+          vgname: gluster_vg_sdb
+      gluster_infra_thinpools:
+        - vgname: gluster_vg_sdb
+          thinpoolname: gluster_thinpool_gluster_vg_sdb
+          thinpoolsize: 100G
+          poolmetadatasize: 1G
+      gluster_infra_lv_logicalvols:
+        - vgname: gluster_vg_sdb
+          thinpool: gluster_thinpool_gluster_vg_sdb
+          lvname: gluster_lv_data
+          lvsize: 10G
+        - vgname: gluster_vg_sdb
+          thinpool: gluster_thinpool_gluster_vg_sdb
+          lvname: gluster_lv_vmstore
+          lvsize: 10G
+
+  vars:
+    gluster_infra_disktype: RAID6
+    gluster_infra_stripe_unit_size: 256
+    gluster_infra_diskcount: 12
+    gluster_set_selinux_labels: true
+    gluster_infra_fw_ports:
+      - 2049/tcp
+      - 54321/tcp
+      - 5900/tcp
+      - 5900-6923/tcp
+      - 5666/tcp
+      - 16514/tcp
+    gluster_infra_fw_permanent: true
+    gluster_infra_fw_state: enabled
+    gluster_infra_fw_zone: public
+    gluster_infra_fw_services:
+      - glusterfs
+    gluster_features_force_varlogsizecheck: false
+    cluster_nodes:
+      - host1
+      - host2
+      - host3
+      - host4
+      - host5
+      - host6
+    gluster_features_hci_cluster: '{{ cluster_nodes }}'
+
+    gluster_features_hci_volumes:
+      - volname: engine
+        brick: /gluster_bricks/engine/engine
+        arbiter: 0
+        servers:
+          - host1
+          - host2
+          - host3
+      - volname: data
+        brick: /gluster_bricks/data/data
+        arbiter: 0
+        servers:
+          - host4
+          - host5
+          - host6
+      - volname: vmstore
+        brick: /gluster_bricks/vmstore/vmstore
+        arbiter: 1
+        servers:
+          - host4
+          - host5
+          - host6
