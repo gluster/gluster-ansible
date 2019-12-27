@@ -8,9 +8,8 @@ hc_nodes:
           passphrase: test1234
       gluster_infra_tangserver_config:
         - url: http://<tang server ipaddress>
-          rootpassphrase: test12345
-          rootdevice: /dev/sda
-          networkinterface: en01
+        - url: http://<tang server ipaddress>
+
     host2:
       gluster_infra_luks_devices:
         - devicename: /dev/sdb
@@ -19,9 +18,7 @@ hc_nodes:
           passphrase: test1234
       gluster_infra_tangserver_config:
         - url: http://<tang server ipaddress>
-          rootpassphrase: test12345
-          rootdevice: /dev/sda
-          networkinterface: en01
+
     host3:
       gluster_infra_luks_devices:
         - devicename: /dev/sdd
@@ -30,6 +27,9 @@ hc_nodes:
           passphrase: test1234
       gluster_infra_tangserver_config:
         - url: http://<tang server ipaddress>
-          rootpassphrase: test12345
-          rootdevice: /dev/sda
-          networkinterface: en01
+
+
+  vars:
+    rootpassphrase: redhat123
+    rootdevice: /dev/sda2
+    networkinterface: enp0s3

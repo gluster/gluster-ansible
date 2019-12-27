@@ -30,3 +30,9 @@ Default is: http://resources.ovirt.org/pub/yum-repo/ovirt-release42-snapshot.rpm
 "ovirt_repositories_force_register": false,
 "ovirt_repositories_rhsm_server_hostname": "Hostname of the RHSM server. By default it's used from rhsm configuration"
  For more details please refer: https://github.com/oVirt/ovirt-ansible-repositories
+
+ Integrate Luks/clevis with Tang:
+  Cretate inventory file with ansible-vault create luks_tang-inventory.yml
+  Configure luks device and tang server: ansible-playbook -i luks_tang_inventory.yml /etc/ansible/roles/gluster.ansible/playbooks/hc-ansible-deployment/tasks/luks_tang_setup.yml --tags luksencrypt,bindtang --ask-vault-pass
+  The inventory file will be encrypted as it's contains sensitive data for devices.
+  Or you can create inventory file first and then encrypt like: ansible-vault encrypt luks_tang_inventory.yml 
