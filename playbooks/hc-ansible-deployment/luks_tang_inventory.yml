@@ -18,6 +18,7 @@ hc_nodes:
           passphrase: test1234
       gluster_infra_tangserver_config:
         - url: http://<tang server ipaddress>
+        - url: http://<tang server ipaddress>
 
     host3:
       gluster_infra_luks_devices:
@@ -26,6 +27,7 @@ hc_nodes:
         - devicename: /dev/sde
           passphrase: test1234
       gluster_infra_tangserver_config:
+        - url: http://<tang server ipaddress>
         - url: http://<tang server ipaddress>
 
 
