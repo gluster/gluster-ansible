@@ -28,8 +28,8 @@
     - name: Check if provided hostnames are valid
       assert:
         that:
-          - "result['rc'] == 0"
-          - "result['stdout_lines'] | length > 0"
+          - "result.results[0]['rc'] == 0"
+          - "result.results[0]['stdout_lines'] | length > 0"
         fail_msg: "The given hostname is not valid FQDN"
       when: gluster_features_fqdn_check | default(true)
 
