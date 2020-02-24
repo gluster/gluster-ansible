@@ -6,13 +6,12 @@
   "he_vm_mac_addr": "Valid MAC address",
   "he_default_gateway": "Valid Gateway",
   "he_mgmt_network": "ovirtmgmt",
-  "he_ansible_host_name": "host1",
   "he_storage_domain_name": "HostedEngine",
   "he_storage_domain_path": "/engine",
   "he_storage_domain_addr": "host1",
   "he_mount_options": "backup-volfile-servers=host2:host3",
   "he_bridge_if": "interface name for bridge creation",
   "he_enable_hc_gluster_service": true,
-  "he_mem_size_MB": "4096",
+  "he_mem_size_MB": "16384",
   "he_cluster": "Default"
 }
