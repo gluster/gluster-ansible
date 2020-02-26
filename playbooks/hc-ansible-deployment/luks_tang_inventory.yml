@@ -1,0 +1,39 @@
+hc_nodes:
+  hosts:
+    host1:
+      gluster_infra_luks_devices:
+        - devicename: /dev/sdb
+          passphrase: test123
+        - devicename: /dev/sdc
+          passphrase: test1234
+
+      rootpassphrase: <rootpassphrase for host1>
+      rootdevice: <Root Device Name>
+      networkinterface: <Network interface to bind tang servers>
+
+    host2:
+      gluster_infra_luks_devices:
+        - devicename: /dev/sdb
+          passphrase: test123
+        - devicename: /dev/sdc
+          passphrase: test1234
+
+      rootpassphrase: <rootpassphrase for host2>
+      rootdevice: <Root Device Name>
+      networkinterface: <Network interface to bind tang servers>
+
+    host3:
+      gluster_infra_luks_devices:
+        - devicename: /dev/sdd
+          passphrase: test123
+        - devicename: /dev/sde
+          passphrase: test1234
+
+      rootpassphrase: <rootpassphrase for host3>
+      rootdevice: <Root Device Name>
+      networkinterface: <Network interface to bind tang servers>
+
+  vars:
+    gluster_infra_tangservers:
+      - url: http://<tang server ipaddress>
+      - url: http://<tang server ipaddress>

@@ -1,0 +1,10 @@
+# Configure clevis and tang for HCI
+# ansible-playbook -i inventory.yml luks_tang_setup.yml --tags luksencrypt,bindtang --ask-vault-pass
+- name: Encrypt devices using LUKS and bind Tang servers
+  hosts: hc_nodes
+  remote_user: root
+  gather_facts: no
+  any_errors_fatal: true
+
+  roles:
+   - gluster.infra
