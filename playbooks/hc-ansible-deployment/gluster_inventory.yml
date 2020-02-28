@@ -33,9 +33,9 @@ hc_nodes:
         - vgname: gluster_vg_sdb
           pvname: /dev/sdb
         - vgname: gluster_vg_sdc
-          pvname: /dev/vdo_sdc
+          pvname: /dev/mapper/vdo_sdc
         - vgname: gluster_vg_sdd
-          pvname: /dev/vdo_sdd
+          pvname: /dev/mapper/vdo_sdd
       
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
