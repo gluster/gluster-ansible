@@ -1,7 +1,7 @@
 hc_nodes:
   hosts:
      # Host1
-    <host1>:
+    <host1-backend-network-FQDN>:
       # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
       # required on that storage volume.
       # The variables refers to:
@@ -9,21 +9,19 @@ hc_nodes:
       # device      - Disk name on which VDO volume to created
       # logicalsize - Logical size of the VDO volume.This value is 10 times 
       #               the size of the physical disk  
-      # emulate512  - VDO device is made as 512e storage volume
+      # emulate512  - VDO device is made as 4KB block sized storage volume(4KN)
       # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
       #               slabsize is 32G else slabsize is 2G
       #
       # Following VDO values are as per recommendation and treated as constants:
       # blockmapcachesize - 128M
-      # readcache         - enabled
-      # readcachesize     - 20M
       # writepolicy       - auto
       #
       # gluster_infra_vdo:
       #   - { name: 'vdo_sdc', device: '/dev/sdc', logicalsize: '5000G', emulate512: 'off', slabsize: '32G',
-      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #       blockmapcachesize:  '128M', writepolicy: 'auto' }
       #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'off', slabsize: '32G',
-      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #       blockmapcachesize:  '128M', writepolicy: 'auto' }
 
       # When dedupe and compression is enabled on the device, 
       # use pvname for that device as '/dev/mapper/<vdo_device_name>
@@ -35,9 +33,9 @@ hc_nodes:
         - vgname: gluster_vg_sdb
           pvname: /dev/sdb
         - vgname: gluster_vg_sdc
-          pvname: /dev/sdc
+          pvname: /dev/mapper/vdo_sdc
         - vgname: gluster_vg_sdd
-          pvname: /dev/sdd
+          pvname: /dev/mapper/vdo_sdd
       
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
@@ -95,7 +93,7 @@ hc_nodes:
           lvsize: 200G
         
     #Host2
-    <host2>:
+    <host2-backend-network-FQDN>:
 
       # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
       # required on that storage volume.
@@ -104,21 +102,19 @@ hc_nodes:
       # device      - Disk name on which VDO volume to created
       # logicalsize - Logical size of the VDO volume.This value is 10 times 
       #               the size of the physical disk  
-      # emulate512  - VDO device is made as 512e storage volume
+      # emulate512  - VDO device is made as 4KB block sized storage volume(4KN)
       # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
       #               slabsize is 32G else slabsize is 2G
       #
       # Following VDO values are as per recommendation and treated as constants:
       # blockmapcachesize - 128M
-      # readcache         - enabled
-      # readcachesize     - 20M
       # writepolicy       - auto
       #
       # gluster_infra_vdo:
       #   - { name: 'vdo_sdc', device: '/dev/sdc', logicalsize: '5000G', emulate512: 'off', slabsize: '32G',
-      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #       blockmapcachesize:  '128M', writepolicy: 'auto' }
       #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'off', slabsize: '32G',
-      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #       blockmapcachesize:  '128M', writepolicy: 'auto' }
 
       # When dedupe and compression is enabled on the device, 
       # use pvname for that device as '/dev/mapper/<vdo_device_name>
@@ -130,9 +126,9 @@ hc_nodes:
         - vgname: gluster_vg_sdb
           pvname: /dev/sdb
         - vgname: gluster_vg_sdc
-          pvname: /dev/sdc
+          pvname: /dev/mapper/vdo_sdc
         - vgname: gluster_vg_sdd
-          pvname: /dev/sdd
+          pvname: /dev/mapper/vdo_sdd
       
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
@@ -190,7 +186,7 @@ hc_nodes:
           lvsize: 200G
 
     #Host3
-    <host3>:
+    <host3-backend-network-FQDN>:
 
       # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
       # required on that storage volume.
@@ -199,21 +195,19 @@ hc_nodes:
       # device      - Disk name on which VDO volume to created
       # logicalsize - Logical size of the VDO volume.This value is 10 times 
       #               the size of the physical disk  
-      # emulate512  - VDO device is made as 512e storage volume
+      # emulate512  - VDO device is made as 4KB block sized storage volume(4KN)
       # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
       #               slabsize is 32G else slabsize is 2G
       #
       # Following VDO values are as per recommendation and treated as constants:
       # blockmapcachesize - 128M
-      # readcache         - enabled
-      # readcachesize     - 20M
       # writepolicy       - auto
       #
       # gluster_infra_vdo:
       #   - { name: 'vdo_sdc', device: '/dev/sdc', logicalsize: '5000G', emulate512: 'off', slabsize: '32G',
-      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #       blockmapcachesize:  '128M', writepolicy: 'auto' }
       #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'off', slabsize: '32G',
-      #       blockmapcachesize:  '128M', readcachesize: '20M', readcache: 'enabled', writepolicy: 'auto' }
+      #       blockmapcachesize:  '128M', writepolicy: 'auto' }
  
       # When dedupe and compression is enabled on the device, 
       # use pvname for that device as '/dev/mapper/<vdo_device_name>
@@ -225,9 +219,9 @@ hc_nodes:
         - vgname: gluster_vg_sdb
           pvname: /dev/sdb
         - vgname: gluster_vg_sdc
-          pvname: /dev/sdc
+          pvname: /dev/mapper/vdo_sdc
         - vgname: gluster_vg_sdd
-          pvname: /dev/sdd
+          pvname: /dev/mapper/vdo_sdd
       
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
@@ -286,12 +280,26 @@ hc_nodes:
       
   # Common configurations
   vars:
+    # Add the required hosts in the cluster. It can be 3,6,9 or 12 hosts
     cluster_nodes:
-       - host1
-       - host2
-       - host3
+       - <host1-backend-network-FQDN>
+       - <host2-backend-network-FQDN>
+       - <host3-backend-network-FQDN>
+
     gluster_features_hci_cluster: "{{ cluster_nodes }}"
-    # Set up GlusterFS hyperconverged interface
+    
+    # Create Gluster volumes for hyperconverged setup in 2 formats
+    # format-1: Create bricks for gluster 1x3 replica volumes by default
+    #           on the first 3 hosts
+    # format-2: Create bricks on the specified hosts, and it can create
+    #           nx3 distributed-replicated or distributed arbitrated 
+    #           replicate volumes
+    # Note: format-1 and format-2 are mutually exclusive (ie) either 
+    #       format-1 or format-2 to be used. Don't mix the formats for 
+    #       different volumes
+
+    # Format-1 - Creates gluster 1x3 replicate or arbitrated replicate volume
+    # - engine, vmstore, data with bricks on first 3 hosts
     gluster_features_hci_volumes:
       - volname: engine
         brick: /gluster_bricks/engine/engine
@@ -302,6 +310,40 @@ hc_nodes:
       - volname: vmstore
         brick: /gluster_bricks/vmstore/vmstore
         arbiter: 0
+    
+    # Format-2 - Allows to create nx3 volumes, with bricks on specified host
+    #gluster_features_hci_volumes:
+    #  - volname: engine
+    #    brick: /gluster_bricks/engine/engine
+    #    arbiter: 0
+    #    servers:
+    #      - host1
+    #      - host2
+    #      - host3
+    #
+    # # Following creates 2x3 'Data' gluster volume with bricks on host4,
+    # # host5, host6, host7, host8, host9
+    #  - volname: data
+    #    brick: /gluster_bricks/data/data
+    #    arbiter: 0
+    #    servers:
+    #      - host4
+    #      - host5
+    #      - host6
+    #      - host7
+    #      - host8
+    #      - host9
+    #
+    # # Following creates 2x3 'vmstore' gluster volume with 2 bricks for
+    # # each host
+    #  - volname: vmstore
+    #    brick: /gluster_bricks/vmstore1/vmstore1,/gluster_bricks/vmstore2/vmstore2
+    #    arbiter: 0
+    #    servers:
+    #      - host1
+    #      - host2
+    #      - host3
+    
     # Firewall setup
     gluster_infra_fw_ports:
        - 2049/tcp
@@ -315,8 +357,13 @@ hc_nodes:
     gluster_infra_fw_zone: public
     gluster_infra_fw_services:
        - glusterfs
+    # Allowed values for 'gluster_infra_disktype' - RAID6, RAID5, JBOD
     gluster_infra_disktype: RAID6
+
+    # 'gluster_infra_diskcount' is the number of data disks in the RAID set. 
+    #  Note for JBOD its 1
     gluster_infra_diskcount: 10
+    
     gluster_infra_stripe_unit_size: 256
     gluster_features_force_varlogsizecheck: false
     gluster_set_selinux_labels: true
@@ -324,9 +371,9 @@ hc_nodes:
 ## Auto add hosts vars
 gluster:
  hosts:
-  host2:
-  host3:
+  <host2-frontend-network-FQDN>:
+  <host3-frontend-network-FQDN>:
  vars:
   storage_domains: 
-    - {"name":"data","host":"host1","address":"host1","path":"/data","function":"data","mount_options":"backup-volfile-servers=host2:host3"}
-    - {"name":"vmstore","host":"host1","address":"host1","path":"/vmstore","function":"data","mount_options":"backup-volfile-servers=host2:host3"}
+    - {"name":"data","host":"host1-frontend-network-FQDN","address":"host1-backend-network-FQDN","path":"/data","function":"data","mount_options":"backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN"}
+    - {"name":"vmstore","host":"host1-frontend-network-FQDN","address":"host1-backend-network-FQDN","path":"/vmstore","function":"data","mount_options":"backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN"}
