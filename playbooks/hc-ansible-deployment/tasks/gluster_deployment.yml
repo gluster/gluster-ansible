@@ -4,7 +4,7 @@
 - name: Setup backend and deploy HCI
   hosts: hc_nodes
   remote_user: root
-  gather_facts: no
+  gather_facts: yes
   any_errors_fatal: true
 
   # We are moving some of the prerequisite checks from gluster.features role so
