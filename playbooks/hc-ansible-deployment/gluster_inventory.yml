@@ -2,15 +2,24 @@ hc_nodes:
   hosts:
      # Host1
     <host1-backend-network-FQDN>:
-      # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
+
+      # Blacklist multipath devices which are used for gluster bricks
+      # If you omit blacklist_mpath_devices it means all device will be whitelisted.
+      # If the disks are not blacklisted, and then its taken that multipath configuration
+      # exists in the server and one should provide /dev/mapper/<WWID> instead of /dev/sdx
+      blacklist_mpath_devices:
+        - sdb
+        - sdc
+
+      # Enable this section 'gluster_infra_vdo', if dedupe & compression is
       # required on that storage volume.
       # The variables refers to:
       # name        - VDO volume name to be used
       # device      - Disk name on which VDO volume to created
-      # logicalsize - Logical size of the VDO volume.This value is 10 times 
-      #               the size of the physical disk  
+      # logicalsize - Logical size of the VDO volume.This value is 10 times
+      #               the size of the physical disk
       # emulate512  - VDO device is made as 4KB block sized storage volume(4KN)
-      # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
+      # slabsize    - VDO slab size. If VDO logical size >= 1000G then
       #               slabsize is 32G else slabsize is 2G
       #
       # Following VDO values are as per recommendation and treated as constants:
@@ -23,12 +32,12 @@ hc_nodes:
       #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'off', slabsize: '32G',
       #       blockmapcachesize:  '128M', writepolicy: 'auto' }
 
-      # When dedupe and compression is enabled on the device, 
+      # When dedupe and compression is enabled on the device,
       # use pvname for that device as '/dev/mapper/<vdo_device_name>
       #
       # The variables refers to:
       # vgname - VG to be created on the disk
-      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc) 
+      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc)
       gluster_infra_volume_groups:
         - vgname: gluster_vg_sdb
           pvname: /dev/sdb
@@ -36,7 +45,7 @@ hc_nodes:
           pvname: /dev/mapper/vdo_sdc
         - vgname: gluster_vg_sdd
           pvname: /dev/mapper/vdo_sdd
-      
+
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
           lvname: gluster_lv_engine
@@ -50,7 +59,7 @@ hc_nodes:
 
       # 'thinpoolsize' is the sum of sizes of all LVs to be created on that VG
       # In the case of VDO enabled, 'thinpoolsize' is 10 times the sum of sizes
-      # of all LVs to be created on that VG. Recommended values for 
+      # of all LVs to be created on that VG. Recommended values for
       # 'poolmetadatasize' is 16GB and that should be considered exclusive of
       # 'thinpoolsize'
       gluster_infra_thinpools:
@@ -91,19 +100,27 @@ hc_nodes:
           thinpool: gluster_thinpool_sdd
           lvname: gluster_lv_vmstore
           lvsize: 200G
-        
+
     #Host2
     <host2-backend-network-FQDN>:
 
-      # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
+      # Blacklist multipath devices which are used for gluster bricks
+      # If you omit blacklist_mpath_devices it means all device will be whitelisted.
+      # If the disks are not blacklisted, and then its taken that multipath configuration
+      # exists in the server and one should provide /dev/mapper/<WWID> instead of /dev/sdx
+      blacklist_mpath_devices:
+        - sdb
+        - sdc
+
+      # Enable this section 'gluster_infra_vdo', if dedupe & compression is
       # required on that storage volume.
       # The variables refers to:
       # name        - VDO volume name to be used
       # device      - Disk name on which VDO volume to created
-      # logicalsize - Logical size of the VDO volume.This value is 10 times 
-      #               the size of the physical disk  
+      # logicalsize - Logical size of the VDO volume.This value is 10 times
+      #               the size of the physical disk
       # emulate512  - VDO device is made as 4KB block sized storage volume(4KN)
-      # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
+      # slabsize    - VDO slab size. If VDO logical size >= 1000G then
       #               slabsize is 32G else slabsize is 2G
       #
       # Following VDO values are as per recommendation and treated as constants:
@@ -116,12 +133,12 @@ hc_nodes:
       #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'off', slabsize: '32G',
       #       blockmapcachesize:  '128M', writepolicy: 'auto' }
 
-      # When dedupe and compression is enabled on the device, 
+      # When dedupe and compression is enabled on the device,
       # use pvname for that device as '/dev/mapper/<vdo_device_name>
       #
       # The variables refers to:
       # vgname - VG to be created on the disk
-      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc) 
+      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc)
       gluster_infra_volume_groups:
         - vgname: gluster_vg_sdb
           pvname: /dev/sdb
@@ -129,7 +146,7 @@ hc_nodes:
           pvname: /dev/mapper/vdo_sdc
         - vgname: gluster_vg_sdd
           pvname: /dev/mapper/vdo_sdd
-      
+
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
           lvname: gluster_lv_engine
@@ -143,7 +160,7 @@ hc_nodes:
 
       # 'thinpoolsize' is the sum of sizes of all LVs to be created on that VG
       # In the case of VDO enabled, 'thinpoolsize' is 10 times the sum of sizes
-      # of all LVs to be created on that VG. Recommended values for 
+      # of all LVs to be created on that VG. Recommended values for
       # 'poolmetadatasize' is 16GB and that should be considered exclusive of
       # 'thinpoolsize'
       gluster_infra_thinpools:
@@ -188,15 +205,23 @@ hc_nodes:
     #Host3
     <host3-backend-network-FQDN>:
 
-      # Enable this section 'gluster_infra_vdo', if dedupe & compression is 
+      # Blacklist multipath devices which are used for gluster bricks
+      # If you omit blacklist_mpath_devices it means all device will be whitelisted.
+      # If the disks are not blacklisted, and then its taken that multipath configuration
+      # exists in the server and one should provide /dev/mapper/<WWID> instead of /dev/sdx
+      blacklist_mpath_devices:
+        - sdb
+        - sdd
+
+      # Enable this section 'gluster_infra_vdo', if dedupe & compression is
       # required on that storage volume.
       # The variables refers to:
       # name        - VDO volume name to be used
       # device      - Disk name on which VDO volume to created
-      # logicalsize - Logical size of the VDO volume.This value is 10 times 
-      #               the size of the physical disk  
+      # logicalsize - Logical size of the VDO volume.This value is 10 times
+      #               the size of the physical disk
       # emulate512  - VDO device is made as 4KB block sized storage volume(4KN)
-      # slabsize    - VDO slab size. If VDO logical size >= 1000G then 
+      # slabsize    - VDO slab size. If VDO logical size >= 1000G then
       #               slabsize is 32G else slabsize is 2G
       #
       # Following VDO values are as per recommendation and treated as constants:
@@ -208,13 +233,13 @@ hc_nodes:
       #       blockmapcachesize:  '128M', writepolicy: 'auto' }
       #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'off', slabsize: '32G',
       #       blockmapcachesize:  '128M', writepolicy: 'auto' }
- 
-      # When dedupe and compression is enabled on the device, 
+
+      # When dedupe and compression is enabled on the device,
       # use pvname for that device as '/dev/mapper/<vdo_device_name>
       #
       # The variables refers to:
       # vgname - VG to be created on the disk
-      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc) 
+      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc)
       gluster_infra_volume_groups:
         - vgname: gluster_vg_sdb
           pvname: /dev/sdb
@@ -222,7 +247,7 @@ hc_nodes:
           pvname: /dev/mapper/vdo_sdc
         - vgname: gluster_vg_sdd
           pvname: /dev/mapper/vdo_sdd
-      
+
       gluster_infra_mount_devices:
         - path: /gluster_bricks/engine
           lvname: gluster_lv_engine
@@ -236,7 +261,7 @@ hc_nodes:
 
       # 'thinpoolsize' is the sum of sizes of all LVs to be created on that VG
       # In the case of VDO enabled, 'thinpoolsize' is 10 times the sum of sizes
-      # of all LVs to be created on that VG. Recommended values for 
+      # of all LVs to be created on that VG. Recommended values for
       # 'poolmetadatasize' is 16GB and that should be considered exclusive of
       # 'thinpoolsize'
       gluster_infra_thinpools:
@@ -277,7 +302,7 @@ hc_nodes:
           thinpool: gluster_thinpool_sdd
           lvname: gluster_lv_vmstore
           lvsize: 200G
-      
+
   # Common configurations
   vars:
     # Add the required hosts in the cluster. It can be 3,6,9 or 12 hosts
@@ -287,15 +312,15 @@ hc_nodes:
        - <host3-backend-network-FQDN>
 
     gluster_features_hci_cluster: "{{ cluster_nodes }}"
-    
+
     # Create Gluster volumes for hyperconverged setup in 2 formats
     # format-1: Create bricks for gluster 1x3 replica volumes by default
     #           on the first 3 hosts
     # format-2: Create bricks on the specified hosts, and it can create
-    #           nx3 distributed-replicated or distributed arbitrated 
+    #           nx3 distributed-replicated or distributed arbitrated
     #           replicate volumes
-    # Note: format-1 and format-2 are mutually exclusive (ie) either 
-    #       format-1 or format-2 to be used. Don't mix the formats for 
+    # Note: format-1 and format-2 are mutually exclusive (ie) either
+    #       format-1 or format-2 to be used. Don't mix the formats for
     #       different volumes
 
     # Format-1 - Creates gluster 1x3 replicate or arbitrated replicate volume
@@ -310,7 +335,7 @@ hc_nodes:
       - volname: vmstore
         brick: /gluster_bricks/vmstore/vmstore
         arbiter: 0
-    
+
     # Format-2 - Allows to create nx3 volumes, with bricks on specified host
     #gluster_features_hci_volumes:
     #  - volname: engine
@@ -343,7 +368,7 @@ hc_nodes:
     #      - host1
     #      - host2
     #      - host3
-    
+
     # Firewall setup
     gluster_infra_fw_ports:
        - 2049/tcp
@@ -360,10 +385,10 @@ hc_nodes:
     # Allowed values for 'gluster_infra_disktype' - RAID6, RAID5, JBOD
     gluster_infra_disktype: RAID6
 
-    # 'gluster_infra_diskcount' is the number of data disks in the RAID set. 
+    # 'gluster_infra_diskcount' is the number of data disks in the RAID set.
     #  Note for JBOD its 1
     gluster_infra_diskcount: 10
-    
+
     gluster_infra_stripe_unit_size: 256
     gluster_features_force_varlogsizecheck: false
     gluster_set_selinux_labels: true
@@ -374,6 +399,6 @@ gluster:
   <host2-frontend-network-FQDN>:
   <host3-frontend-network-FQDN>:
  vars:
-  storage_domains: 
+  storage_domains:
     - {"name":"data","host":"host1-frontend-network-FQDN","address":"host1-backend-network-FQDN","path":"/data","function":"data","mount_options":"backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN"}
     - {"name":"vmstore","host":"host1-frontend-network-FQDN","address":"host1-backend-network-FQDN","path":"/vmstore","function":"data","mount_options":"backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN"}
