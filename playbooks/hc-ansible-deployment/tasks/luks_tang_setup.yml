@@ -11,23 +11,20 @@
   pre_tasks:
     # Check if root device is encrypted
     - name: Find whether root device is a luks device
-      command: cryptsetup isLuks {{ rootdevice }}
+      shell: cryptsetup isLuks {{ rootdevice }}
       register: result
-      when: when: gluster_infra_tangservers is defined
+      ignore_errors: True
+      when: gluster_infra_tangservers is defined
       run_once: true
-
-    - name: Get the results of isLuks command
-      command: echo $?
-      register: result
-      when: when: gluster_infra_tangservers is defined
-      run_once: true
+      tags:
+        - bindtang
 
     - name: Check if root device is encrypted
-      assert:
-        that:
-          - "result != 0"
-        fail_msg: "The given {{ rootdevice }} is not encrypted."
-      when: when: gluster_infra_tangservers is defined
+      fail:
+        msg: "The given boot device {{ rootdevice }} is not encrypted."
+      when: "result.failed == true"
+      tags:
+        - bindtang
 
   roles:
    - gluster.infra
