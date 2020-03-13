@@ -84,5 +84,16 @@
       when: item != inventory_hostname and peernodes.stdout_lines|length > 0
       run_once: true
 
+    - name: Remove /etc/multipath/conf.d/blacklist.conf
+      file:
+        path: /etc/multipath/conf.d/blacklist.conf
+        state: absent
+      when: blacklist_mpath_devices is defined
+
+    - name: Reload multipathd
+      shell: systemctl reload multipathd.service
+      failed_when: False
+      when: blacklist_mpath_devices is defined
+
   tags:
     - cleanup_bricks
