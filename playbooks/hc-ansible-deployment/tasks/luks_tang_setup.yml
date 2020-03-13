@@ -1,10 +1,30 @@
 # Configure clevis and tang for HCI
 # ansible-playbook -i inventory.yml luks_tang_setup.yml --tags luksencrypt,bindtang --ask-vault-pass
+# If you are willing to blacklist multipath devices then use "blacklistdevices" tags like:
+# ansible-playbook -i inventory.yml luks_tang_setup.yml --tags blacklistdevices,luksencrypt,bindtang --ask-vault-pass
 - name: Encrypt devices using LUKS and bind Tang servers
   hosts: hc_nodes
   remote_user: root
   gather_facts: no
   any_errors_fatal: true
+
+  pre_tasks:
+    # Check if root device is encrypted
+    - name: Find whether root device is a luks device
+      shell: cryptsetup isLuks {{ rootdevice }}
+      register: result
+      ignore_errors: True
+      when: gluster_infra_tangservers is defined
+      run_once: true
+      tags:
+        - bindtang
+
+    - name: Check if root device is encrypted
+      fail:
+        msg: "The given boot device {{ rootdevice }} is not encrypted."
+      when: "result.failed == true"
+      tags:
+        - bindtang
 
   roles:
    - gluster.infra
