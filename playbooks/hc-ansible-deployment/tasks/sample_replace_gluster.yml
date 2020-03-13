@@ -1,0 +1,7 @@
+---
+- remote_user: root
+  gather_facts: no
+  hosts: cluster_node
+  no_log: True
+  roles:
+    - gluster.maintenance

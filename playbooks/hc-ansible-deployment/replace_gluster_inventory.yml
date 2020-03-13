@@ -1,0 +1,9 @@
+[cluster_node]
+host2 # mention whatever host is provided in gluster_maintenance_cluster_node or in gluster_maintenance_cluster_node_2 either one.
+
+vars:
+   - gluster_maintenance_old_node: host1
+   - gluster_maintenance_new_node: host1
+   - gluster_maintenance_cluster_node: host2
+   - gluster_maintenance_cluster_node_2: host3
+3
