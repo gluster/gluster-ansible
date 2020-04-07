@@ -84,10 +84,12 @@
       when: item != inventory_hostname and peernodes.stdout_lines|length > 0
       run_once: true
 
-    - name: Remove /etc/multipath/conf.d/blacklist.conf
-      file:
+    - name: Remove specified device from blacklist
+      blockinfile:
         path: /etc/multipath/conf.d/blacklist.conf
-        state: absent
+        marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item }}"
+        content: ""
+      with_items: "{{ blacklist_mpath_devices }}"
       when: blacklist_mpath_devices is defined
 
     - name: Reload multipathd
