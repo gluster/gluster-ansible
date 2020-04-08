@@ -1,5 +1,5 @@
 ---
-- name: Remove gluster setup
+- name: Remove Multipath and NBDE setup
   hosts: hc_nodes
   remote_user: root
   gather_facts: False
@@ -47,3 +47,16 @@
     - name: Execute dracut -vf to configure tang
       command: dracut -vf --regenerate-all
       when: gluster_infra_tangservers is defined
+
+    - name: Remove specified device from blacklist
+      blockinfile:
+        path: /etc/multipath/conf.d/blacklist.conf
+        marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item }}"
+        content: ""
+      with_items: "{{ blacklist_mpath_devices }}"
+      when: blacklist_mpath_devices is defined
+
+    - name: Reload multipathd
+      shell: systemctl reload multipathd.service
+      failed_when: False
+      when: blacklist_mpath_devices is defined
