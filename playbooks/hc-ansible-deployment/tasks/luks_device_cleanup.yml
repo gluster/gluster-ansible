@@ -30,3 +30,20 @@
         state: absent
       with_items: "{{ gluster_infra_luks_devices }}"
       when: gluster_infra_luks_devices is defined
+
+    - name: Unbind tang server with clevis
+      shell: clevis-luks-unbind -d  {{ rootdevice }} -s {{ index }} -f
+      loop: "{{ gluster_infra_tangservers }}"
+      loop_control:
+        index_var: index
+      when: gluster_infra_tangservers is defined
+
+    - name: Remove /etc/dracut.conf.d/clevis.conf
+      file:
+        path: /etc/dracut.conf.d/clevis.conf
+        state: absent
+      when: gluster_infra_tangservers is defined
+
+    - name: Execute dracut -vf to configure tang
+      command: dracut -vf --regenerate-all
+      when: gluster_infra_tangservers is defined

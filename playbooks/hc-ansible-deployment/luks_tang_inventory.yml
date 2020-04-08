@@ -58,6 +58,8 @@ hc_nodes:
       networkinterface: <Network interface to bind tang servers>
 
   vars:
+    # when tangd.socket is using the custom port other than 80
+    # then please specify <port>
     gluster_infra_tangservers:
-      - url: http://<tang server ipaddress>
-      - url: http://<tang server ipaddress>
+      - url: http://<tang server ipaddress>:<port>
+      - url: http://<tang server ipaddress>:<port>
