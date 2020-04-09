@@ -18,6 +18,10 @@ hc_nodes:
       rootpassphrase: <rootpassphrase for host1>
       rootdevice: <Root Device Name>
       networkinterface: <Network interface to bind tang servers>
+      # Required below variables only if ip_config_method is static
+      host_ip_addr: <Static IP of the host>
+      host_ip_prefix: <Network prefix>
+      host_net_gateway: <Default network gateway>
 
     host2:
       # Blacklist multipath devices which are used for gluster bricks
@@ -37,6 +41,10 @@ hc_nodes:
       rootpassphrase: <rootpassphrase for host2>
       rootdevice: <Root Device Name>
       networkinterface: <Network interface to bind tang servers>
+      # Required below variables only if ip_config_method is static
+      host_ip_addr: <Static IP of the host>
+      host_ip_prefix: <Network prefix>
+      host_net_gateway: <Default network gateway>
 
     host3:
       # Blacklist multipath devices which are used for gluster bricks
@@ -56,8 +64,16 @@ hc_nodes:
       rootpassphrase: <rootpassphrase for host3>
       rootdevice: <Root Device Name>
       networkinterface: <Network interface to bind tang servers>
+      # Required below variables only if ip_config_method is static
+      host_ip_addr: <Static IP of the host>
+      host_ip_prefix: <Network prefix>
+      host_net_gateway: <Default network gateway>
 
   vars:
+    ip_version: <IPv4/IPv6>
+    ip_config_method: <dhcp/static>
+    # when tangd.socket is using the custom port other than 80
+    # then please specify <port>
     gluster_infra_tangservers:
-      - url: http://<tang server ipaddress>
-      - url: http://<tang server ipaddress>
+      - url: http://<tang server ipaddress>:<port>
+      - url: http://<tang server ipaddress>:<port>
