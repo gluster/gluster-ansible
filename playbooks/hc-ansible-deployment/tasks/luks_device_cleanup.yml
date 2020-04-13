@@ -1,0 +1,75 @@
+---
+- name: Remove Multipath and NBDE setup
+  hosts: hc_nodes
+  remote_user: root
+  gather_facts: False
+  ignore_errors: True
+  tasks:
+    - name: Remove all attached key file with luks device
+      no_log: true
+      shell: cryptsetup luksRemoveKey {{ item.devicename }} /etc/{{ item.devicename.split('/')[-1] }}_keyfile
+      with_items: "{{ gluster_infra_luks_devices }}"
+      when: gluster_infra_luks_devices is defined
+
+    - name: Erase all key slots for luks device
+      no_log: true
+      shell: echo 'YES' | cryptsetup erase {{ item.devicename }}
+      with_items: "{{ gluster_infra_luks_devices }}"
+      when: gluster_infra_luks_devices is defined
+
+    - name: Remove luks device
+      no_log: true
+      shell: cryptsetup remove luks_{{ item.devicename.split('/')[-1] }}
+      with_items: "{{ gluster_infra_luks_devices }}"
+      when: gluster_infra_luks_devices is defined
+
+    - name: Remove all key file with luks device
+      no_log: true
+      file:
+        path: /etc/{{ item.devicename.split('/')[-1] }}_keyfile
+        state: absent
+      with_items: "{{ gluster_infra_luks_devices }}"
+      when: gluster_infra_luks_devices is defined
+
+    - name: Remove specified device info from /etc/crypttab
+      blockinfile:
+        path: /etc/crypttab
+        marker: "# {mark} Entry for {{ item.devicename }}"
+        content: ""
+      with_items: "{{ gluster_infra_luks_devices }}"
+      when: gluster_infra_luks_devices is defined
+
+    - name: Erase luks signature from device
+      shell: wipefs -a {{ item.devicename }}
+      with_items: "{{ gluster_infra_luks_devices }}"
+      when: gluster_infra_luks_devices is defined
+
+    - name: Unbind tang server with clevis
+      shell: clevis-luks-unbind -d  {{ rootdevice }} -s {{ index }} -f
+      loop: "{{ gluster_infra_tangservers }}"
+      loop_control:
+        index_var: index
+      when: gluster_infra_tangservers is defined
+
+    - name: Remove /etc/dracut.conf.d/clevis.conf
+      file:
+        path: /etc/dracut.conf.d/clevis.conf
+        state: absent
+      when: gluster_infra_tangservers is defined
+
+    - name: Execute dracut -vf to configure tang
+      command: dracut -vf --regenerate-all
+      when: gluster_infra_tangservers is defined
+
+    - name: Remove specified device from blacklist
+      blockinfile:
+        path: /etc/multipath/conf.d/blacklist.conf
+        marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item }}"
+        content: ""
+      with_items: "{{ blacklist_mpath_devices }}"
+      when: blacklist_mpath_devices is defined
+
+    - name: Reload multipathd
+      shell: systemctl reload multipathd.service
+      failed_when: False
+      when: blacklist_mpath_devices is defined
