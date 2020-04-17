@@ -1,11 +1,14 @@
 hc_nodes:
   hosts:
     host1:
-      # Blacklist multipath devices which are used for gluster bricks
-      # If you omit blacklist_mpath_devices it means all device will be whitelisted.
-      # If the disks are not blacklisted, and then its taken that multipath configuration
-      # exists in the server and one should provide /dev/mapper/<WWID> instead of /dev/sdx
+      # 1. Blacklist multipath devices which are used for gluster bricks.
+      #    The disks nned not be blacklisted only when multipath configuration
+      #    exists in the server and in that case the value for 'devicename' 
+      #    should be /dev/mapper/<WWID> instead of /dev/sdx
+      # 2. On considering to blacklist the disks,include BOOT/OS disk too
+      #    In the following example, sda is the BOOT/OS disk
       blacklist_mpath_devices:
+        - sda
         - sdb
         - sdc
 
@@ -24,11 +27,14 @@ hc_nodes:
       host_net_gateway: <Default network gateway>
 
     host2:
-      # Blacklist multipath devices which are used for gluster bricks
-      # If you omit blacklist_mpath_devices it means all device will be whitelisted.
-      # If the disks are not blacklisted, and then its taken that multipath configuration
-      # exists in the server and one should provide /dev/mapper/<WWID> instead of /dev/sdx
+      # 1. Blacklist multipath devices which are used for gluster bricks.
+      #    The disks need not be blacklisted only when multipath configuration
+      #    exists in the server and in that case the value for 'devicename'
+      #    should be /dev/mapper/<WWID> instead of /dev/sdx
+      # 2. On considering to blacklist the disks,include BOOT/OS disk too
+      #    In the following example, sda is the BOOT/OS disk
       blacklist_mpath_devices:
+        - sda
         - sdb
         - sdc
 
@@ -47,11 +53,14 @@ hc_nodes:
       host_net_gateway: <Default network gateway>
 
     host3:
-      # Blacklist multipath devices which are used for gluster bricks
-      # If you omit blacklist_mpath_devices it means all device will be whitelisted.
-      # If the disks are not blacklisted, and then its taken that multipath configuration
-      # exists in the server and one should provide /dev/mapper/<WWID> instead of /dev/sdx
+      # 1. Blacklist multipath devices which are used for gluster bricks.
+      #    The disks need not be blacklisted only when multipath configuration
+      #    exists in the server and in that case the value for 'devicename'
+      #    should be /dev/mapper/<WWID> instead of /dev/sdx
+      # 2. On considering to blacklist the disks,include BOOT/OS disk too
+      #    In the following example, sda is the BOOT/OS disk
       blacklist_mpath_devices:
+        - sda
         - sdb
         - sdc
 
