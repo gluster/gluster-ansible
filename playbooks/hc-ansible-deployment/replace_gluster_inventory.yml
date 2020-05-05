@@ -6,4 +6,3 @@ vars:
    - gluster_maintenance_new_node: host1
    - gluster_maintenance_cluster_node: host2
    - gluster_maintenance_cluster_node_2: host3
-3
