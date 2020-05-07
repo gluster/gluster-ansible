@@ -1,0 +1,12 @@
+---
+
+# Prepare Node for replace
+- name: Setup backend
+  hosts: hc_nodes
+  remote_user: root
+  gather_facts: no
+  any_errors_fatal: true
+
+  roles:
+     - gluster.infra
+     - gluster.features
