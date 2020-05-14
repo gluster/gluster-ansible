@@ -1,0 +1,25 @@
+---
+- hosts: hc_nodes
+  remote_user: root
+  gather_facts: yes
+  tasks:
+    - block:
+      - name: Gluster host preparation
+        include_role:
+         name: "{{ item }}"
+        with_items:
+          - gluster.infra
+          - gluster.features
+      tags:
+       - preparehost
+
+- hosts: cluster_node
+  remote_user: root
+  gather_facts: yes
+  tasks:
+    - block:
+      - name: Gluster Peer Membership Restoration
+        include_role:
+          name: gluster.maintenance
+      tags:
+       - restorepeer

@@ -1,0 +1,10 @@
+cluster_node:
+  hosts:
+   # mention whatever host is provided in gluster_maintenance_cluster_node or in gluster_maintenance_cluster_node_2 either one.
+   <host2-backend-network-FQDN>:
+
+  vars:
+    gluster_maintenance_old_node: <host1-backend-network-FQDN>
+    gluster_maintenance_new_node: <host1-backend-network-FQDN>
+    gluster_maintenance_cluster_node: <host2-backend-network-FQDN>
+    gluster_maintenance_cluster_node_2: <host3-backend-network-FQDN>
