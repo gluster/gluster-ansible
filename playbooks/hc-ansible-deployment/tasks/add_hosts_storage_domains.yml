@@ -60,3 +60,4 @@
           assigned: true
           required: false
           gluster: true
+          migration: true
