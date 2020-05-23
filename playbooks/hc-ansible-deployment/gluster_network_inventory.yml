@@ -1,0 +1,13 @@
+...
+
+hosts:
+  localhost:
+   vars:
+     he_fqdn: <FQDN-for-Hosted-Engine>
+     he_admin_password: <UI-password-for-login>
+     datacenter_name: <datacenter_name>
+     cluster_name: <cluster_name>
+     cluster_nodes:
+        - {host: 'host1-frontend-network-FQDN', interface: 'host1-network-interface-name'}
+        - {host: 'host2-frontend-network-FQDN', interface: 'host2-network-interface-name'}
+        - {host: 'host3-frontend-network-FQDN', interface: 'host3-network-interface-name'}
