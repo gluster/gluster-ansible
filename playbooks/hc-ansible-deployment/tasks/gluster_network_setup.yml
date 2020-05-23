@@ -21,7 +21,7 @@
           gluster: true
           migration: true
 
-  - name: Attach gluster_net to host network
+  - name: Attach gluster_net to host dhcp network
     ignore_errors: true
     ovirt_host_network:
       auth: "{{ ovirt_auth }}"
@@ -31,6 +31,25 @@
       interface: "{{ item.interface }}"
       networks:
         - name: gluster_net
-          boot_protocol: dhcp
+          boot_protocol: "{{boot_protocol }}"
+          version: "{{version | default('v4')}}"
     with_items: "{{ cluster_nodes }}"
-    when: cluster_nodes is defined
+    when: cluster_nodes is defined and boot_protocol == "dhcp"
+
+  - name: Attach gluster_net to host static network
+    ignore_errors: true
+    ovirt_host_network:
+      auth: "{{ ovirt_auth }}"
+      name: "{{ item.host }}"
+      save: true
+      check: true
+      interface: "{{ item.interface }}"
+      networks:
+        - name: gluster_net
+          boot_protocol: "{{ boot_protocol }}"
+          version: "{{ version | default('v4') }}"
+          address: "{{ item.address }}"
+          netmask: "{{ item.netmask }}"
+          gateway: "{{ item.gateway }}"
+    with_items: "{{ cluster_nodes }}"
+    when: cluster_nodes is defined and boot_protocol == "static"
