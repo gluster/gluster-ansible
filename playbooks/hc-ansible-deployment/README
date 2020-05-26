@@ -49,8 +49,8 @@ There are two tasks:
   2- Gluster Peer Membership Restoration
      This task has tags called "restorepeer"
 If both operation need to be performed then run:
-ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml replace_node.yml
+ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml
 Or using tags indivisual operation can be performed like:
-  ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml replace_node.yml --tags restorepeer
+  ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml --tags restorepeer
 Or
-  ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml replace_node.yml --tags preparehost     
+  ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml --tags preparehost     

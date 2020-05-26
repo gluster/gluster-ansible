@@ -6,5 +6,5 @@ cluster_node:
   vars:
     gluster_maintenance_old_node: <gluster_maintenance_old_node>
     gluster_maintenance_new_node: <gluster_maintenance_new_node>
-    gluster_maintenance_cluster_node: <gluster_maintenance_cluster_node>
-    gluster_maintenance_cluster_node_2: <gluster_maintenance_cluster_node_2>
+    gluster_maintenance_cluster_node: <any-active-host1-backend-network-FQDN>
+    gluster_maintenance_cluster_node_2: <any-active-host2-backend-network-FQDN>
