@@ -3,7 +3,7 @@
   tasks:
   - name: Obtain SSO token using username/password creds.
     ovirt_auth:
-      url: https://"{{ he_fqdn }}"/ovirt-engine/api
+      url: https://{{ he_fqdn }}/ovirt-engine/api
       username: admin@internal
       password: "{{ he_admin_password }}"
 
