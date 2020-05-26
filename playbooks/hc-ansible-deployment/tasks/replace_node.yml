@@ -6,10 +6,12 @@
     - block:
       - name: Gluster host preparation
         include_role:
-         name: "{{ item }}"
+         name: "{{ line_item }}"
         with_items:
           - gluster.infra
           - gluster.features
+        loop_control:
+          loop_var: line_item
       tags:
        - preparehost
 
