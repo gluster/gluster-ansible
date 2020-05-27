@@ -1,0 +1,23 @@
+all:
+ hosts:
+  localhost:
+ vars:
+  he_fqdn: <FQDN-for-Hosted-Engine>
+  he_admin_password: <UI-password-for-login>
+  datacenter_name: <datacenter_name>
+  cluster_name: <cluster_name>
+  boot_protocol: <dhcp/static>
+  # Default version is v4
+  version: <v4/v6>
+
+  # For dhcp boot_protocol
+  cluster_nodes:
+    - {host: 'host1-frontend-network-FQDN', interface: 'host1-network-interface-name'}
+    - {host: 'host2-frontend-network-FQDN', interface: 'host2-network-interface-name'}
+    - {host: 'host3-frontend-network-FQDN', interface: 'host3-network-interface-name'}
+
+  # For static boot_protocol
+  #cluster_nodes:
+   #- {host: 'host1-frontend-network-FQDN', interface: 'host1-network-interface-name', address: <IP address >, netmask: <Subnet mask>, gateway: <Gateway>}
+   #- {host: 'host2-frontend-network-FQDN', interface: 'host2-network-interface-name', address: <IP address >, netmask: <Subnet mask>, gateway: <Gateway>}
+   #- {host: 'host3-frontend-network-FQDN', interface: 'host3-network-interface-name', address: <IP address >, netmask: <Subnet mask>, gateway: <Gateway>}

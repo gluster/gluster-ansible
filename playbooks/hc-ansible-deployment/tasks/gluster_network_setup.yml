@@ -1,0 +1,52 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Obtain SSO token using username/password creds.
+    ovirt_auth:
+      url: https://{{ he_fqdn }}/ovirt-engine/api
+      username: admin@internal
+      password: "{{ he_admin_password }}"
+
+  - name: Create oVirt gluster network
+    ovirt_network:
+      data_center: "{{ datacenter_name }}"
+      name: gluster_net
+      vm_network: false
+      auth: "{{ ovirt_auth }}"
+      clusters:
+        - name: "{{ cluster_name }}"
+          assigned: true
+          required: false
+          gluster: true
+          migration: true
+
+  - name: Attach gluster_net to host dhcp network
+    ovirt_host_network:
+      auth: "{{ ovirt_auth }}"
+      name: "{{ item.host }}"
+      save: true
+      check: true
+      interface: "{{ item.interface }}"
+      networks:
+        - name: gluster_net
+          boot_protocol: "{{boot_protocol }}"
+          version: "{{version | default('v4')}}"
+    with_items: "{{ cluster_nodes }}"
+    when: cluster_nodes is defined and boot_protocol == "dhcp"
+
+  - name: Attach gluster_net to host static network
+    ovirt_host_network:
+      auth: "{{ ovirt_auth }}"
+      name: "{{ item.host }}"
+      save: true
+      check: true
+      interface: "{{ item.interface }}"
+      networks:
+        - name: gluster_net
+          boot_protocol: "{{ boot_protocol }}"
+          version: "{{ version | default('v4') }}"
+          address: "{{ item.address }}"
+          netmask: "{{ item.netmask }}"
+          gateway: "{{ item.gateway }}"
+    with_items: "{{ cluster_nodes }}"
+    when: cluster_nodes is defined and boot_protocol == "static"

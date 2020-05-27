@@ -53,4 +53,9 @@ ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/
 Or using tags indivisual operation can be performed like:
   ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml --tags restorepeer
 Or
-  ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml --tags preparehost     
+  ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml --tags preparehost
+
+Gluster logical network:
+ 1- Add appropriate values in gluster_network_inventory.yml
+ 2- Run playbook with inventory like:
+    ansible-playbook -i gluster_network_inventory.yml tasks/gluster_network_setup.yml
