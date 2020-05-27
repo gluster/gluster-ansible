@@ -38,3 +38,19 @@ Default is: http://resources.ovirt.org/pub/yum-repo/ovirt-release42-snapshot.rpm
  Integrate Luks/clevis with Tang by blacklisting multipath devices:
   Cretate inventory file with ansible-vault create luks_tang-inventory.yml
   Configure luks device and tang server: ansible-playbook -i luks_tang_inventory.yml /etc/ansible/roles/gluster.ansible/playbooks/hc-ansible-deployment/tasks/luks_tang_setup.yml --tags blacklistdevices,luksencrypt,bindtang --ask-vault-pass
+
+Host replacement:
+  Create two inventory:
+    1- node_prep_inventory.yml - This inventory contains information about host preparation.
+    2- node_replace_inventory.yml - This inventory contains information about node which needs to be replaced and other hosts
+There are two tasks:
+  1- Gluster host preparation
+     This task has tags called "preparehost"
+  2- Gluster Peer Membership Restoration
+     This task has tags called "restorepeer"
+If both operation need to be performed then run:
+ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml
+Or using tags indivisual operation can be performed like:
+  ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml --tags restorepeer
+Or
+  ansible-playbook -i node_prep_inventory.yml -i node_replace_inventory.yml tasks/replace_node.yml --tags preparehost     
