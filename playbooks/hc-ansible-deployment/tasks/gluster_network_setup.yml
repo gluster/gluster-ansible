@@ -8,7 +8,6 @@
       password: "{{ he_admin_password }}"
 
   - name: Create oVirt gluster network
-    ignore_errors: true
     ovirt_network:
       data_center: "{{ datacenter_name }}"
       name: gluster_net
@@ -22,7 +21,6 @@
           migration: true
 
   - name: Attach gluster_net to host dhcp network
-    ignore_errors: true
     ovirt_host_network:
       auth: "{{ ovirt_auth }}"
       name: "{{ item.host }}"
@@ -37,7 +35,6 @@
     when: cluster_nodes is defined and boot_protocol == "dhcp"
 
   - name: Attach gluster_net to host static network
-    ignore_errors: true
     ovirt_host_network:
       auth: "{{ ovirt_auth }}"
       name: "{{ item.host }}"
