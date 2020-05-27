@@ -1,0 +1,132 @@
+# Section for Host Preparation Phase
+hc_nodes:
+  hosts:
+     # Host - The node which need to be prepared for replacement
+    <host*-backend-network-FQDN>:
+
+      # Blacklist multipath devices which are used for gluster bricks
+      # If you omit blacklist_mpath_devices it means all device will be whitelisted.
+      # If the disks are not blacklisted, and then its taken that multipath configuration
+      # exists in the server and one should provide /dev/mapper/<WWID> instead of /dev/sdx
+      blacklist_mpath_devices:
+        - sdb
+        - sdc
+
+      # Enable this section 'gluster_infra_vdo', if dedupe & compression is
+      # required on that storage volume.
+      # The variables refers to:
+      # name        - VDO volume name to be used
+      # device      - Disk name on which VDO volume to created
+      # logicalsize - Logical size of the VDO volume.This value is 10 times
+      #               the size of the physical disk
+      # emulate512  - VDO device is made as 4KB block sized storage volume(4KN)
+      # slabsize    - VDO slab size. If VDO logical size >= 1000G then
+      #               slabsize is 32G else slabsize is 2G
+      #
+      # Following VDO values are as per recommendation and treated as constants:
+      # blockmapcachesize - 128M
+      # writepolicy       - auto
+      #
+      # gluster_infra_vdo:
+      #   - { name: 'vdo_sdc', device: '/dev/sdc', logicalsize: '5000G', emulate512: 'off', slabsize: '32G',
+      #       blockmapcachesize:  '128M', writepolicy: 'auto' }
+      #   - { name: 'vdo_sdd', device: '/dev/sdd', logicalsize: '3000G', emulate512: 'off', slabsize: '32G',
+      #       blockmapcachesize:  '128M', writepolicy: 'auto' }
+
+      # When dedupe and compression is enabled on the device,
+      # use pvname for that device as '/dev/mapper/<vdo_device_name>
+      #
+      # The variables refers to:
+      # vgname - VG to be created on the disk
+      # pvname - Physical disk (/dev/sdc) or VDO volume (/dev/mapper/vdo_sdc)
+      gluster_infra_volume_groups:
+        - vgname: gluster_vg_sdb
+          pvname: /dev/sdb
+        - vgname: gluster_vg_sdc
+          pvname: /dev/mapper/vdo_sdc
+        - vgname: gluster_vg_sdd
+          pvname: /dev/mapper/vdo_sdd
+
+      gluster_infra_mount_devices:
+        - path: /gluster_bricks/engine
+          lvname: gluster_lv_engine
+          vgname: gluster_vg_sdb
+        - path: /gluster_bricks/data
+          lvname: gluster_lv_data
+          vgname: gluster_vg_sdc
+        - path: /gluster_bricks/vmstore
+          lvname: gluster_lv_vmstore
+          vgname: gluster_vg_sdd
+
+      # 'thinpoolsize' is the sum of sizes of all LVs to be created on that VG
+      # In the case of VDO enabled, 'thinpoolsize' is 10 times the sum of sizes
+      # of all LVs to be created on that VG. Recommended values for
+      # 'poolmetadatasize' is 16GB and that should be considered exclusive of
+      # 'thinpoolsize'
+      gluster_infra_thinpools:
+        - {vgname: 'gluster_vg_sdc', thinpoolname: 'gluster_thinpool_sdc', thinpoolsize: '500G', poolmetadatasize: '16G'}
+        - {vgname: 'gluster_vg_sdd', thinpoolname: 'gluster_thinpool_sdd', thinpoolsize: '500G', poolmetadatasize: '16G'}
+
+      # Enable the following section if LVM cache is to enabled
+      # Following are the variables:
+      # vgname            - VG with the slow HDD device that needs caching
+      # cachedisk         - Comma separate value of slow HDD and fast SSD
+      #                     In this example, /dev/sdb is the slow HDD, /dev/sde is fast SSD
+      # cachelvname       - LV cache name
+      # cachethinpoolname - Thinpool to which the fast SSD to be attached
+      # cachelvsize       - Size of cache data LV. This is the SSD_size - (1/1000) of SSD_size
+      #                     1/1000th of SSD space will be used by cache LV meta
+      # cachemode         - writethrough or writeback
+      # gluster_infra_cache_vars:
+      #  - vgname: gluster_vg_sdb
+      #    cachedisk: /dev/sdb,/dev/sde
+      #    cachelvname: cachelv_thinpool_sdb
+      #    cachethinpoolname: gluster_thinpool_sdb
+      #    cachelvsize: '250G'
+      #    cachemode: writethrough
+
+      # Only the engine brick needs to be thickly provisioned
+      # Engine brick requires 100GB of disk space
+      gluster_infra_thick_lvs:
+        - vgname: gluster_vg_sdb
+          lvname: gluster_lv_engine
+          size: 100G
+
+      gluster_infra_lv_logicalvols:
+        - vgname: gluster_vg_sdc
+          thinpool: gluster_thinpool_sdc
+          lvname: gluster_lv_data
+          lvsize: 200G
+        - vgname: gluster_vg_sdd
+          thinpool: gluster_thinpool_sdd
+          lvname: gluster_lv_vmstore
+          lvsize: 200G
+
+  # Common configurations
+  vars:
+    # In case of IPv6 based deployment "gluster_features_enable_ipv6" needs to be enabled,below line needs to be uncommented, like:
+    # gluster_features_enable_ipv6: true
+
+    # Firewall setup
+    gluster_infra_fw_ports:
+       - 2049/tcp
+       - 54321/tcp
+       - 5900-6923/tcp
+       - 16514/tcp
+       - 5666/tcp
+       - 16514/tcp
+    gluster_infra_fw_permanent: true
+    gluster_infra_fw_state: enabled
+    gluster_infra_fw_zone: public
+    gluster_infra_fw_services:
+       - glusterfs
+    # Allowed values for 'gluster_infra_disktype' - RAID6, RAID5, JBOD
+    gluster_infra_disktype: RAID6
+
+    # 'gluster_infra_diskcount' is the number of data disks in the RAID set.
+    #  Note for JBOD its 1
+    gluster_infra_diskcount: 10
+
+    gluster_infra_stripe_unit_size: 256
+    gluster_features_force_varlogsizecheck: false
+    gluster_set_selinux_labels: true
