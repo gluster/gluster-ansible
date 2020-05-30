@@ -409,5 +409,5 @@ gluster:
 # In case of IPv6 based deployment there is additional mount option required i.e. xlator-option="transport.address-family=inet6", below needs to be replaced with above one.
 # Ex:
 #storage_domains:
-  #- {"name":"data","host":"host1-frontend-network-FQDN","address":"host1-backend-network-FQDN","path":"/data","function":"data","mount_options":"backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN,xlator-option="transport.address-family=inet6""}
-  #- {"name":"vmstore","host":"host1-frontend-network-FQDN","address":"host1-backend-network-FQDN","path":"/vmstore","function":"data","mount_options":"backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN,xlator-option="transport.address-family=inet6""}
+  #- {"name":"data","host":"host1-frontend-network-FQDN","address":"host1-backend-network-FQDN","path":"/data","function":"data","mount_options":"backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN,xlator-option=transport.address-family=inet6"}
+  #- {"name":"vmstore","host":"host1-frontend-network-FQDN","address":"host1-backend-network-FQDN","path":"/vmstore","function":"data","mount_options":"backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN,xlator-option=transport.address-family=inet6"}
