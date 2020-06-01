@@ -3,6 +3,9 @@ hc-ansible-deployment is end-to-end HC deployment playbook which is using both g
    Enable "VDO config" for VDO and disable Non-VDO part.
 2. The json file he_gluster_vars.json has Hosted-Engine related configurations for gluster.
 
+Note: # In he_gluster_vars.json file for IPv6 Hosted Engine use 
+"he_mount_options": "backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN,xlator-option=transport.address-family=inet6"
+
 For new HC deployment both file need to be modified with accurate values like host,device,pvs,vgs,lvs,fqdn,passwords etc
 
 How to run:
