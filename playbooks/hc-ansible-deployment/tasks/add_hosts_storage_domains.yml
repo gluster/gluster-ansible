@@ -47,17 +47,3 @@
     loop_control:
       loop_var: sd
     when: "'gluster' in groups"
-
-  - name: Create oVirt gluster network
-    ignore_errors: true
-    ovirt_network:
-      data_center: "{{ datacenter_name }}"
-      name: gluster_net
-      vm_network: false
-      auth: "{{ ovirt_auth }}"
-      clusters:
-        - name: "{{ cluster_name }}"
-          assigned: true
-          required: false
-          gluster: true
-          migration: true
