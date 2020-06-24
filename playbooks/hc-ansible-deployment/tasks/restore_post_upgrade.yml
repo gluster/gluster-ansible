@@ -1,0 +1,145 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Checking that the backup_dir location is right
+    stat:
+      path: {{ backup_dir }}/hostname
+    register: hostnamefile
+
+  - name: Fails if backup_dir is not right
+    fail: msg: Use backup_dir point to extracted contents from backup
+    when: hostnamefile.isreg is not defined
+
+  - name: Restore in the case of NBDE is enabled
+    block:
+      - name: Restore NBDE keyfiles, if available
+        shell: cp {{ backup_dir }}/sd*keyfile /etc/
+
+      - name: check for crypttab file
+        stat:
+          path: {{ backup_dir }}/crypttab
+        register: crypttabfile
+        when: nbde_setup is defined and nbde_setup
+
+      - name: Fail if crypttab file is missing in NBDE restore
+        fail:
+          msg: crypttab file is missing in the backup
+        when: crypttabfile.stat.isreg is not defined
+
+      - name: Reconstruct crypttab entries from crypttab
+        shell: grep etc {{ backup_dir }}/crypttab >> /etc/crypttab
+
+      - name: Get the list of crypttab entries for bricks
+        shell: cat /etc/crypttab | grep etc
+        register: crypttab_entries
+
+      - name: Open the LUKS devices
+        shell: cryptsetup luksOpen {{ item.split()[1] }} {{ item.split()[0] }} -d {{ item.split()[2] }}
+        loop: "{{ crypttab_entries.stdout_lines }}"
+
+    when: nbde_setup is defined and nbde_setup
+
+  - name: Check if vdo conf file exists
+    stat:
+      path: "{{backup_dir}}"/vdoconf.yml
+    register: vdoconfres
+
+  - name: Restore the VDO conf file
+    copy:
+      src: "{{backup_dir}}"/vdoconf.yml
+      dest: /etc/vdoconf.yml
+    when: vdoconfres.stat.isreg is defined
+
+  - name: Get the VDO version
+    shell: vdo status | grep 'vdo version' | cut -d':' -f2
+    register: vdostatres
+
+  - name: Register the version
+    set_fact:
+      vdovers: "{{ vdostatres.stdout | trim }}"
+
+  - name: Remove VDO attribute about readCache with VDO vers >= 6.2
+    lineinfile:
+      path: /etc/vdoconf.yml
+      regexp: readCache
+      state: absent
+    when:  vdovers is version('6.2', '>=')
+
+  - name: Restart VDO service
+    service:
+      name: vdo
+      state: restarted
+
+  - name: Check for the presence of fstab
+    stat:
+      path: "{{backup_dir}}"/fstab
+    result: fstabres
+
+  - fail:
+      msg: fstab missing in the backup dir - "{{backup_dir}}"
+    when: fstabres.stat.isreg is not defined
+
+  - name: Create fstab entries for gluster bricks refering to /etc/fstab backup
+    shell: diff --new-line-format="" --unchanged-line-format=""  {{backup_dir}}/fstab /etc/fstab | grep -v boot >> /etc/fstab
+
+  - name: Reactivate all VGs
+    shell: vgchange --refresh
+
+  - name: Mount all the filesystems
+    shell: mount -a
+
+  - name: Restart systemctl daemon
+    shell: sytemctl daemon-reload
+
+  - name: Restore gluster configuration post upgrade
+    block:
+      - name: Check for the presence of glusterd.info in the archive
+        stat:
+          path: "{{backup_dir}}"/glusterd.info
+        register: glusterdres
+
+      - fail:
+          msg: glusterd.info is missing in the backup dir - {{backup_dir}}
+        when: glusterdres.stat.isreg is not defined
+
+      - name: Restore the gluster UUID of the host
+        shell: grep -i uuid "{{backup_dir}}"/glusterd.info
+        register: uuidres
+
+      - lineinfile:
+          path: /var/lib/glusterd/glusterd.info
+          regex: UUID
+          line: "{{uuidres.stdout}}"
+
+      - name: Check for the presence of peers directory
+        stat:
+          path: "{{backup_dir}}"/glusterd/peers
+        register: peerdir
+
+      - fail:
+          msg: gluster peer files are missing in the archive
+        when: peerdir.stat.isdir is not defined
+
+      - name: Copy the peer files
+        copy:
+          src: "{{backup_dir}}"/glusterd/peers/
+          dest: /var/lib/glusterd/peers/
+
+      - name: Restart glusterd service
+        service:
+          name: glusterd
+          state: restarted
+
+      - name: Wait for 5 seconds for glusterd to sync on all the nodes
+        wait_for:
+          timeout: 5
+
+      - name: Get the list of volumes
+        shell: gluster volume list
+        register: volumes
+
+      - name: Enable self-heal on all the volumes
+        ignore_errors: yes
+        shell: gluster volume heal {{ item }}
+        with_items: "{{ volumes.stdout_lines }}"
+    when: upgrade is defined and upgrade
