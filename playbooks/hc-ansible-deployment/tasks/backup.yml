@@ -71,5 +71,5 @@
 
   - name: Create a tar.gz with all the contents
     archive:
-      path: "{{ backup_dir }}"
+      path: "{{ backup_dir }}/*"
       dest: /root/rhvh-node-{{ hostname.stdout }}-backup.tar.gz

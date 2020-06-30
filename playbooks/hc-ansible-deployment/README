@@ -3,7 +3,7 @@ hc-ansible-deployment is end-to-end HC deployment playbook which is using both g
    Enable "VDO config" for VDO and disable Non-VDO part.
 2. The json file he_gluster_vars.json has Hosted-Engine related configurations for gluster.
 
-Note: # In he_gluster_vars.json file for IPv6 Hosted Engine use 
+Note: # In he_gluster_vars.json file for IPv6 Hosted Engine use
 "he_mount_options": "backup-volfile-servers=host2-backend-network-FQDN:host3-backend-network-FQDN,xlator-option=transport.address-family=inet6"
 
 For new HC deployment both file need to be modified with accurate values like host,device,pvs,vgs,lvs,fqdn,passwords etc
@@ -62,3 +62,15 @@ Gluster logical network:
  1- Add appropriate values in gluster_network_inventory.yml
  2- Run playbook with inventory like:
     ansible-playbook -i gluster_network_inventory.yml tasks/gluster_network_setup.yml
+
+
+Backup of the host configuration files can be done concurrently on all the HC nodes.
+  After running the backup playbook, make sure to copy the archive to safe location.
+  To backup the configuration files on HC node run the following:
+  # ansible-playbook -i archive_config_inventory.yml archive_config.yml --tasks backupfiles
+
+Restoring the configuration should be done on specific node only. So add only one hosts
+  in the 'hosts' section of inventory. Also make sure to unarchive the backup tar file
+  previously backed up.
+  To restore the configuration files on that node, run with tag 'restorefiles'
+  # ansible-playbook -i archive_config_inventory.yml archive_config.yml --tasks restorefiles

@@ -3,23 +3,23 @@
   tasks:
   - name: Checking that the backup_dir location is right
     stat:
-      path: {{ backup_dir }}/hostname
+      path: "{{ backup_dir }}/hostname"
     register: hostnamefile
 
   - name: Fails if backup_dir is not right
-    fail: msg: Use backup_dir point to extracted contents from backup
-    when: hostnamefile.isreg is not defined
+    fail:
+      msg: Use backup_dir point to extracted contents from backup
+    when: hostnamefile.stat.isreg is not defined
 
   - name: Restore in the case of NBDE is enabled
     block:
       - name: Restore NBDE keyfiles, if available
-        shell: cp {{ backup_dir }}/sd*keyfile /etc/
+        shell: cp "{{ backup_dir }}"/sd*keyfile /etc/
 
       - name: check for crypttab file
         stat:
-          path: {{ backup_dir }}/crypttab
+          path: "{{ backup_dir }}/crypttab"
         register: crypttabfile
-        when: nbde_setup is defined and nbde_setup
 
       - name: Fail if crypttab file is missing in NBDE restore
         fail:
@@ -41,12 +41,12 @@
 
   - name: Check if vdo conf file exists
     stat:
-      path: "{{backup_dir}}"/vdoconf.yml
+      path: "{{backup_dir}}/vdoconf.yml"
     register: vdoconfres
 
   - name: Restore the VDO conf file
     copy:
-      src: "{{backup_dir}}"/vdoconf.yml
+      src: "{{backup_dir}}/vdoconf.yml"
       dest: /etc/vdoconf.yml
     when: vdoconfres.stat.isreg is defined
 
@@ -72,30 +72,56 @@
 
   - name: Check for the presence of fstab
     stat:
-      path: "{{backup_dir}}"/fstab
-    result: fstabres
+      path: "{{backup_dir}}/fstab"
+    register: fstabres
 
   - fail:
       msg: fstab missing in the backup dir - "{{backup_dir}}"
     when: fstabres.stat.isreg is not defined
 
-  - name: Create fstab entries for gluster bricks refering to /etc/fstab backup
-    shell: diff --new-line-format="" --unchanged-line-format=""  {{backup_dir}}/fstab /etc/fstab | grep -v boot >> /etc/fstab
+  - name: Create fstab entries for gluster bricks referring to /etc/fstab backup in tmp file
+    shell: diff --new-line-format="" --unchanged-line-format=""  {{backup_dir}}/fstab /etc/fstab | grep -v boot > /tmp/fstab
+
+  - name: Append contents of temp fstab file to /etc/fstab
+    shell: cat /tmp/fstab >> /etc/fstab
 
   - name: Reactivate all VGs
-    shell: vgchange --refresh
+    shell: vgchange -a y
+
+  - name: Find out the list of gluster brick mountpoint
+    shell: cat /tmp/fstab | cut -d ' ' -f2
+    register: glustermounts
+
+  - name: Create mount directories
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items: "{{ glustermounts.stdout_lines }}"
 
   - name: Mount all the filesystems
     shell: mount -a
 
+  - name: Apply SELinux Labels on these mount points
+    shell: semanage fcontext -a -t glusterd_brick_t "{{ item }}"
+    with_items: "{{ glustermounts.stdout_lines }}"
+
+  - name: Restore context on the mount points
+    shell: restorecon -Rv "{{ item }}"
+    with_items: "{{ glustermounts.stdout_lines }}"
+
+  - name: remove the temp fstab file
+    file:
+      path: /tmp/fstab
+      state: absent
+
   - name: Restart systemctl daemon
-    shell: sytemctl daemon-reload
+    shell: systemctl daemon-reload
 
   - name: Restore gluster configuration post upgrade
     block:
       - name: Check for the presence of glusterd.info in the archive
         stat:
-          path: "{{backup_dir}}"/glusterd.info
+          path: "{{backup_dir}}/glusterd/glusterd.info"
         register: glusterdres
 
       - fail:
@@ -103,7 +129,7 @@
         when: glusterdres.stat.isreg is not defined
 
       - name: Restore the gluster UUID of the host
-        shell: grep -i uuid "{{backup_dir}}"/glusterd.info
+        shell: grep -i uuid "{{backup_dir}}/glusterd/glusterd.info"
         register: uuidres
 
       - lineinfile:
@@ -113,7 +139,7 @@
 
       - name: Check for the presence of peers directory
         stat:
-          path: "{{backup_dir}}"/glusterd/peers
+          path: "{{backup_dir}}/glusterd/peers"
         register: peerdir
 
       - fail:
@@ -122,7 +148,7 @@
 
       - name: Copy the peer files
         copy:
-          src: "{{backup_dir}}"/glusterd/peers/
+          src: "{{backup_dir}}/glusterd/peers/"
           dest: /var/lib/glusterd/peers/
 
       - name: Restart glusterd service
@@ -140,6 +166,6 @@
 
       - name: Enable self-heal on all the volumes
         ignore_errors: yes
-        shell: gluster volume heal {{ item }}
+        shell: gluster volume heal "{{ item }}"
         with_items: "{{ volumes.stdout_lines }}"
     when: upgrade is defined and upgrade
