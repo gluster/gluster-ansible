@@ -1,0 +1,9 @@
+all:
+  hosts:
+    host1:
+    host2:
+    host3:
+  vars:
+    backup_dir: /archive
+    nbde_setup: false
+    upgrade: true
