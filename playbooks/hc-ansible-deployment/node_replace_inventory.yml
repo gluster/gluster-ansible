@@ -8,3 +8,10 @@ cluster_node:
     gluster_maintenance_new_node: <gluster_maintenance_new_node>
     gluster_maintenance_cluster_node: <any-active-host1-backend-network-FQDN>
     gluster_maintenance_cluster_node_2: <any-active-host2-backend-network-FQDN>
+
+    # Required for activating the host in RHV/oVirt Manager UI
+    activate_host: true
+    ovirt_engine_hostname: <FQDN of ovirt/RHV engine>
+    ovirt_engine_password: <RHV Admin portal password>
+    ovirt_cluster: <oVirt cluster name to add new node>
+    gluster_maintenance_new_node_frontend: <frontend-FQDN for the host>
