@@ -1,0 +1,75 @@
+---
+- hosts: all
+  tasks:
+  - name: Check if backup dir is already available
+    stat:
+      path: "{{ backup_dir }}"
+    register: result
+
+  - fail:
+      msg: Backup directory "{{backup_dir}}" exists, remove it and retry
+    when: result.stat.isdir is defined
+
+  - name: Create temporary backup directory
+    file:
+      path: "{{ backup_dir }}"
+      state: directory
+
+  - name: Get the hostname
+    shell: uname -n
+    register: hostname
+
+  - name: Add hostname details to archive
+    shell: echo {{ hostname.stdout }} > {{ backup_dir }}/hostname
+
+  - name: Dump the IP configuration details
+    shell: ip addr show > {{ backup_dir }}/ipconfig
+
+  - name: Dump the IPv4 routing information
+    shell: ip route > {{ backup_dir }}/ip4route
+
+  - name: Dump the IPv6 routing information
+    shell: ip -6 route > {{ backup_dir }}/ip6route
+
+  - name: Get the disk layout information
+    shell: lsblk > {{ backup_dir }}/lsblk
+
+  - name: Get the mount information for reference
+    shell: df -Th > {{ backup_dir }}/mount
+
+  - name: Check for VDO configuration
+    stat:
+      path: /etc/vdoconf.yml
+    register: vdoconfstat
+
+  - name: Copy VDO configuration, if available
+    shell: cp -a /etc/vdoconf.yml "{{backup_dir}}"
+    when: vdoconfstat.stat.isreg is defined
+
+  - name: Backup fstab
+    shell: cp -a /etc/fstab "{{backup_dir}}"
+
+  - name: Backup glusterd config directory
+    shell: cp -a /var/lib/glusterd "{{backup_dir}}"
+
+  - name: Backup /etc/crypttab, if NBDE is enabled
+    shell: cp -a /etc/crypttab "{{ backup_dir }}"
+    when: nbde_setup is defined and nbde_setup
+
+  - name: Backup keyfiles used for LUKS decryption
+    shell: cp -a /etc/sd*keyfile "{{ backup_dir }}"
+    when: nbde_setup is defined and nbde_setup
+
+  - name: Check for the inventory file generated from cockpit
+    stat:
+      path: /etc/ansible/hc_wizard_inventory.yml
+    register: inventory
+
+  - name: Copy the host inventory file generated from cockpit
+    shell: cp /etc/ansible/hc_wizard_inventory.yml {{ backup_dir }}
+    when: inventory.stat.isreg is defined
+
+  - name: Create a tar.gz with all the contents
+    archive:
+      path: "{{ backup_dir }}/*"
+      dest: /root/rhvh-node-{{ hostname.stdout }}-backup.tar.gz
