@@ -1,0 +1,144 @@
+---
+- hosts: all 
+  tasks:
+  - name: Set the HostedEngine in maintenance
+    run_once: true
+    shell:  hosted-engine --set-maintenance --mode=global
+    delegate_to: localhost
+
+  - name: Stop the ovirt-engine service
+    run_once: true
+    service:
+      name: ovirt-engine
+      state: stopped
+    delegate_to: "{{ ovirt_engine_hostname }}" 
+  
+  - name: Update the engine DB for hostedengine storage
+    run_once: true
+    shell: >
+      /usr/share/ovirt-engine/dbscripts/engine-psql.sh -c "UPDATE 
+      storage_server_connections SET connection = '{{gluster_maintenance_new_node}}:/engine' 
+      WHERE id = (SELECT storage FROM storage_domains WHERE is_hosted_engine_storage = 't');" 
+    delegate_to: "{{ ovirt_engine_hostname }}"
+
+  - name: Shutdown the HostedEngine VM
+    shell: hosted-engine --vm-shutdown
+    ignore_errors: true
+
+  - name: Wait for 10 seconds for HostedEngine VM to shutdown
+    wait_for:
+      timeout: 10
+
+  - name: Set the shared storage config locally
+    shell: hosted-engine --set-shared-config storage {{ gluster_maintenance_new_node }}:/engine --type=he_local
+
+  - name: Set the shared storage config global
+    shell: hosted-engine --set-shared-config storage {{ gluster_maintenance_new_node }}:/engine --type=he_shared
+    run_once: true
+    delegate_to: localhost
+
+  - name: Disconnect storage on all the hosts
+    shell: hosted-engine --disconnect-storage
+
+  - name: Stop ovirt HA agent 
+    service:
+      name: ovirt-ha-agent
+      state: stopped
+
+  - name: Stop ovirt HA broker
+    service:
+      name: ovirt-ha-broker
+      state: stopped
+
+  - name: Stop vdsm service
+    ignore_errors: true
+    service:
+      name: vdsmd
+      state: stopped
+
+  - name: Shutdown the sanlock daemon
+    shell: sanlock client shutdown -f 1
+
+  - name: Unmount the engine fuse mount
+    shell: umount /rhev/data-center/mnt/glusterSD/{{ gluster_maintenance_old_node }}:_engine
+
+  - name: check for any engine fuse mount
+    shell: df -Th | grep fuse.glusterfs | grep engine | wc -l
+    register: count
+
+  - name: Lazy unmount the engine fuse mount
+    shell: umount -l /rhev/data-center/mnt/glusterSD/{{ gluster_maintenance_old_node }}:_engine
+    when: count.stdout|int > 0
+
+  - name: Delete the old engine storage domain mount directory
+    file:
+      path: /rhev/data-center/mnt/glusterSD/{{ gluster_maintenance_old_node }}:_engine
+      state: absent
+
+  - name: Create a new directory
+    file:
+      path: /rhev/data-center/mnt/glusterSD/{{ gluster_maintenance_new_node }}:_engine
+      state: directory
+
+  - name: Unlink all the vdsm links
+    shell: for link in `find /var/run/vdsm/storage -type l`; do unlink $link; done
+
+  - name: Replace old server name with new server name
+    replace:
+      path: /etc/ovirt-hosted-engine/hosted-engine.conf
+      regexp: "{{ gluster_maintenance_old_node }}"
+      replace: "{{ gluster_maintenance_new_node }}"
+
+  - name: Start vdsm
+    service:
+      name: vdsmd
+      state: started
+
+  - name: connect the storage
+    shell: hosted-engine --connect-storage
+
+  - name: Start ovirt HA agent
+    service:
+      name: ovirt-ha-agent
+      state: started
+
+  - name: Start ovirt HA broker
+    service:
+      name: ovirt-ha-broker
+      state: started
+
+  - name: Wait for (3 minutes) HA agents to sync
+    wait_for:
+      timeout: 180
+
+  - name: Remove Global maintenance
+    shell: hosted-engine --set-maintenance --mode=none
+    run_once: true
+    delegate_to: localhost
+
+  - name: Start the hostedengine VM
+    shell: hosted-engine --vm-start
+    run_once: true
+    delegate_to: localhost
+
+  - name: wait for 1 minute
+    wait_for:
+      timeout: 60
+
+  - name: Find out the host id of the old host
+    shell: >
+      hosted-engine --vm-status | grep "{{ gluster_maintenance_old_node }}" |
+      grep -Eo 'id: [0-9]+' | cut -d ':' -f2
+    register: idres
+    run_once: true
+    delegate_to: localhost
+
+  - name: Remove the host id of the old host
+    shell: hosted-engine --clean-metadata --host-id={{ idres.stdout|trim }} --force-clean
+    delegate_to: localhost
+    run_once: true
+
+  - name: Restart oVirt HA broker service
+    service:
+      name: ovirt-ha-broker
+      state: restarted

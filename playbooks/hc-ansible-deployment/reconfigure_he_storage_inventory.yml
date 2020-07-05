@@ -1,0 +1,11 @@
+all:
+  hosts:
+    # Include only the active hosts in the cluster deployed with hosted-engine --deploy
+    # Do not include old or new hosts in this cluster
+    <host1>:
+    <host2>:
+
+  vars:
+    gluster_maintenance_old_node: <backend-network-FQDN-of-old-node>
+    gluster_maintenance_new_node: <backend-network-FQDN-of-new-node>
+    ovirt_engine_hostname: <FQDN-of-oVirt/RHV-HostedEngine-VM>
