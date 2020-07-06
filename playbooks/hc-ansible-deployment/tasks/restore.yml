@@ -80,7 +80,7 @@
     when: fstabres.stat.isreg is not defined
 
   - name: Create fstab entries for gluster bricks referring to /etc/fstab backup in tmp file
-    shell: diff --new-line-format="" --unchanged-line-format=""  {{backup_dir}}/fstab /etc/fstab | grep -v boot > /tmp/fstab
+    shell: grep gluster_bricks {{backup_dir}}/fstab > /tmp/fstab
 
   - name: Append contents of temp fstab file to /etc/fstab
     shell: cat /tmp/fstab >> /etc/fstab
