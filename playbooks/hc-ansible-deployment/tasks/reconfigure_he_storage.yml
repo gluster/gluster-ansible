@@ -1,5 +1,5 @@
 ---
-- hosts: all 
+- hosts: all
   tasks:
   - name: Set the HostedEngine in maintenance
     run_once: true
@@ -7,18 +7,20 @@
     delegate_to: localhost
 
   - name: Stop the ovirt-engine service
+    connection: ssh
     run_once: true
     service:
       name: ovirt-engine
       state: stopped
-    delegate_to: "{{ ovirt_engine_hostname }}" 
-  
+    delegate_to: "{{ ovirt_engine_hostname }}"
+
   - name: Update the engine DB for hostedengine storage
+    connection: ssh
     run_once: true
     shell: >
-      /usr/share/ovirt-engine/dbscripts/engine-psql.sh -c "UPDATE 
-      storage_server_connections SET connection = '{{gluster_maintenance_new_node}}:/engine' 
-      WHERE id = (SELECT storage FROM storage_domains WHERE is_hosted_engine_storage = 't');" 
+      /usr/share/ovirt-engine/dbscripts/engine-psql.sh -c "UPDATE
+      storage_server_connections SET connection = '{{gluster_maintenance_new_node}}:/engine'
+      WHERE id = (SELECT storage FROM storage_domains WHERE is_hosted_engine_storage = 't');"
     delegate_to: "{{ ovirt_engine_hostname }}"
 
   - name: Shutdown the HostedEngine VM
@@ -40,7 +42,7 @@
   - name: Disconnect storage on all the hosts
     shell: hosted-engine --disconnect-storage
 
-  - name: Stop ovirt HA agent 
+  - name: Stop ovirt HA agent
     service:
       name: ovirt-ha-agent
       state: stopped
