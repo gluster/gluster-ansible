@@ -2,6 +2,7 @@
 - hosts: localhost
   tasks:
   - name: Set Engine public key as authorized key without validating the TLS/SSL certificates
+    connection: ssh
     authorized_key:
       user: root
       state: present
