@@ -13,6 +13,7 @@
       name: gluster_net
       vm_network: false
       auth: "{{ ovirt_auth }}"
+      mtu: "{{ mtu_value | default(1500) }}"
       clusters:
         - name: "{{ cluster_name }}"
           assigned: true

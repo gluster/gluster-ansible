@@ -9,6 +9,7 @@ all:
   boot_protocol: <dhcp/static>
   # Default version is v4
   version: <v4/v6>
+  mtu_value: <desired-mtu-value>
 
   # For dhcp boot_protocol
   cluster_nodes:
