@@ -45,6 +45,27 @@
           - "disk_size.stdout|int > gluster_features_min_disk|default(15000)"
         fail_msg: "The size of /var should be greater than or equal to 15G"
       when: gluster_features_force_varlogsizecheck | default(true)
+      
+      
+    - name: Check if block device is 512B
+      shell: >
+         blockdev --getss {{ item.pvname }} | grep -Po -q "512"  && echo true || echo false
+      register: is512
+      with_items: "{{ gluster_infra_volume_groups }}"
+
+    - name: Check if block device is 4KN
+      shell: >
+         blockdev --getss {{ item.pvname }} | grep -Po -q "4096"  && echo true || echo false
+      register: is4KN
+      with_items: "{{ gluster_infra_volume_groups }}"
+
+    - fail:
+        msg: "Mix of 4K and 512 Block devices are not allowed"
+      with_nested:
+        - "{{ is512.results }}"
+        - "{{ is4KN.results }}"
+      when: item[0].stdout|bool and item[1].stdout|bool
+
 
     # logical block size of 512 bytes. To disable the check set
     # gluster_features_512B_check to false. DELETE the below task once
