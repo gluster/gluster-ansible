@@ -13,5 +13,6 @@
   "he_bridge_if": "interface name for bridge creation",
   "he_enable_hc_gluster_service": true,
   "he_mem_size_MB": "16384",
-  "he_cluster": "Default"
+  "he_cluster": "Default",
+  "he_vcpus": 4
 }
