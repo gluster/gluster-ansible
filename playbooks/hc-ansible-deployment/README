@@ -21,6 +21,11 @@ How to run:
 For gluster deployment clean up:
   # ansible-playbook -i gluster_inventory.yml tasks/gluster_cleanup.yml
 
+For single node HC deployment, there is separate inventory called "single_node_gluster_inventory.yml".
+How to run:
+  # cd hc-ansible-deployment
+  # ansible-playbook -i single_node_gluster_inventory.yml hc_deployment.yml --extra-vars='@he_gluster_vars.json'
+
 ovirt_repo_release_rpm value should be particular release repo if you are installing role from ansible-galaxy
 
 -> The below variables are required only when user wants to install pkgs using subscription-manager.
@@ -43,7 +48,7 @@ ovirt_repo_release_rpm value should be particular release repo if you are instal
   2. Create a backup copy of the template inventory file
   3. Edit the inventory file right set of values
   4. Encrypt the inventory with ansible-vault # ansible-vault encrypt luks_tang_inventory.yml
-  5. Run the playbook to configure NBDE with LUKS device and tang server: 
+  5. Run the playbook to configure NBDE with LUKS device and tang server:
 	# cd hc-ansible-playbook
         # ansible-playbook -i luks_tang_inventory.yml tasks/luks_tang_setup.yml --tags luksencrypt,bindtang --ask-vault-pass
   6. If blaclisting the devices is also required, include 'blacklistdevices' along with the tags
