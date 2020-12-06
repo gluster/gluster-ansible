@@ -8,6 +8,8 @@
 
   pre_tasks:
     - name: Delete Gluster volume(s)
+      collections:
+        - gluster.gluster
       gluster_volume:
          state: absent
          name: "{{ item }}"
