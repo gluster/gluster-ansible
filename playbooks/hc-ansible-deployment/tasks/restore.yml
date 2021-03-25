@@ -114,6 +114,12 @@
       path: /tmp/fstab
       state: absent
 
+  - name: Restore key files under /etc/ssh
+    shell: yes| cp "{{ backup_dir }}"/ssh/ssh_host* /etc/ssh/ 2>/dev/zero
+
+  - name: Update file permission of files under /etc/ssh
+    shell: chown -R root:ssh_keys /etc/ssh/ssh_host*key
+
   - name: Restart systemctl daemon
     shell: systemctl daemon-reload
 

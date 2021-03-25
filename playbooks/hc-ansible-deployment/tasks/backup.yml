@@ -49,6 +49,9 @@
   - name: Backup fstab
     shell: cp -a /etc/fstab "{{backup_dir}}"
 
+  - name: Backup /etc/ssh directory 
+    shell: cp -a /etc/ssh "{{backup_dir}}"
+
   - name: Backup glusterd config directory
     shell: cp -a /var/lib/glusterd "{{backup_dir}}"
 
