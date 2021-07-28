@@ -1,0 +1,20 @@
+---
+- name: Remove engine DB entry from storage_pool_iso_map
+  command: >-
+    /usr/share/ovirt-engine/dbscripts/engine-psql.sh -c "delete from storage_pool_iso_map where storage_id in (select id from storage_domain_static where(storage_name like 'engine'))"
+  ignore_errors: yes
+
+- name: Remove engine DB entry from storage_server_connections
+  command: >-
+    /usr/share/ovirt-engine/dbscripts/engine-psql.sh -c "delete from storage_server_connections where connection like '%engine'"
+  ignore_errors: yes
+
+- name: Remove hosted_storage DB entry from table storage_domain_dynamic
+  command: >-
+    /usr/share/ovirt-engine/dbscripts/engine-psql.sh -c "delete from storage_domain_dynamic where id in (select id from storage_domain_static where storage_name like 'engine%')"
+  ignore_errors: yes
+
+- name: Remove hosted_storage DB entry from table storage_domain_static 
+  command: >-
+    /usr/share/ovirt-engine/dbscripts/engine-psql.sh -c "delete from storage_domain_static where storage_name like 'engine%'"
+  ignore_errors: yes
