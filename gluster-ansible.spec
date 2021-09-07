@@ -1,5 +1,6 @@
 %global rolesdir %{_sysconfdir}/ansible/roles/gluster.ansible
 %global docdir %{_datadir}/doc/gluster.ansible
+%global hack-script /etc/hack-scripts
 %global buildnum 5
 
 Name:      gluster-ansible
@@ -34,6 +35,8 @@ cp -a playbooks/ %{buildroot}/%{rolesdir}
 mkdir -p %{buildroot}/%{docdir}
 install -p -m 644 README.md LICENSE %{buildroot}/%{docdir}
 
+mkdir -p  %{hack-script}
+cp <script_file_here> %{hack-script}
 
 %files
 %{rolesdir}
