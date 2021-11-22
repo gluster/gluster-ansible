@@ -30,7 +30,9 @@
     with_items: "{{ groups['gluster'] }}"
     loop_control:
      loop_var: host
-    when: "'gluster' in groups"
+    when:
+      - "'gluster' in groups"
+      - add_additional_gluster_hosts | default(true)
 
   - name: "Add additional glusterfs storage domains"
     ignore_errors: true
