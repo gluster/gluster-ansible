@@ -6,6 +6,8 @@
   ignore_errors: True
   tasks:
     - name: Delete the volumes
+      collections:
+        - gluster.gluster
       gluster_volume:
         state: absent
         name: "{{ item.volname }}"
