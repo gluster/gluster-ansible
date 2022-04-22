@@ -5,15 +5,36 @@
   gather_facts: False
   ignore_errors: True
   tasks:
-    - name: Delete the volumes
-      gluster_volume:
-        state: absent
-        name: "{{ item.volname }}"
+
+    - name: Stop Gluster volume(s)
+      ansible.builtin.expect: 
+        command: gluster volume stop {{ item.volname }} force
+        responses: 
+          (.*)Do you want to continue?(.*): "y"
+      run_once: True
+      with_items: "{{ gluster_features_hci_volumes }}"
+      when: gluster_features_hci_volumes is defined
+
+    - name: Delete Gluster volume(s)
+      ansible.builtin.expect: 
+        command: gluster volume delete {{ item.volname }}
+        responses:
+          (.*)Do you want to continue?(.*): "y"
       run_once: True
       with_items: "{{ gluster_features_hci_volumes }}"
       when: gluster_features_hci_volumes is defined
       tags:
         - delete_volumes
+
+    #- name: Delete the volumes
+    #  gluster_volume:
+    #    state: absent
+    #    name: "{{ item.volname }}"
+    #  run_once: True
+    #  with_items: "{{ gluster_features_hci_volumes }}"
+    #  when: gluster_features_hci_volumes is defined
+    #  tags:
+    #    - delete_volumes
 
     # Remove the brick directories
     - name: Remove brick directories
@@ -37,15 +58,16 @@
       with_items: "{{ gluster_infra_mount_devices }}"
 
     - name: Delete volume groups
-      lvg:
-        vg: "{{ item.vgname }}"
-        state: absent
-        force: yes
+      command: vgremove {{ item.vgname }} -y
+#      lvg:
+#        vg: "{{ item.vgname }}"
+#        state: absent
+#        force: yes
       with_items: "{{ gluster_infra_volume_groups }}"
       when: gluster_infra_volume_groups is defined
 
     - name: Remove PV
-      shell: pvremove {{ item.pvname }} -ff
+      shell: pvremove {{ item.pvname }} -f
       register: shell_output
       changed_when: shell_output.rc == 0
       with_items: "{{ gluster_infra_volume_groups }}"
@@ -53,7 +75,7 @@
       failed_when: False
 
     - name: Remove Cache PV
-      shell: pvremove {{ item.cachedisk }} -ff
+      shell: pvremove {{ item.cachedisk }} -f
       register: shell_output
       changed_when: shell_output.rc == 0
       with_items: "{{ gluster_infra_cache_vars }}"
@@ -62,9 +84,10 @@
 
     # Remove vdo devices if any
     - name: Remove VDO devices
-      vdo:
-        name: "{{ item.name }}"
-        state: absent
+      command: "vdo remove -n {{ item.name }} --force"
+      #vdo:
+      #  name: "{{ item.name }}"
+      #  state: absent
       with_items: "{{ gluster_infra_vdo }}"
       when: gluster_infra_vdo is defined
 
@@ -91,6 +114,13 @@
         content: ""
       with_items: "{{ blacklist_mpath_devices }}"
       when: blacklist_mpath_devices is defined
+    
+    - name: Wipe devices
+      shell: wipefs -a /dev/{{ item }}
+      register: shell_output
+      changed_when: shell_output.rc == 0
+      failed_when: False
+      with_items: "{{ blacklist_mpath_devices }}"
 
     - name: Reload multipathd
       shell: systemctl reload multipathd.service
