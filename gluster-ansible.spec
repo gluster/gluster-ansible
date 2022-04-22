@@ -12,7 +12,7 @@ Source0:   %{url}/archive/v%{version}.tar.gz#/%{name}-%{version}-%{buildnum}.tar
 License:   GPLv3
 BuildArch: noarch
 
-Requires:  ansible >= 2.12
+Requires:  ansible-core >= 2.12
 Requires:  gluster-ansible-infra >= 1.0
 Requires:  gluster-ansible-features >= 1.0
 Requires:  gluster-ansible-cluster >= 1.0
