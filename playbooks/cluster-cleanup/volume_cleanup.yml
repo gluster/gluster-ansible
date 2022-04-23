@@ -7,10 +7,19 @@
     - cleanup_vars.yml
 
   pre_tasks:
+    - name: Stop Gluster volume(s)
+      command: "gluster volume stop {{ item }} force"
+      #gluster_volume:
+      #   state: absent
+      #   name: "{{ item }}"
+      with_items: "{{ gluster_volumes }}"
+      run_once: true
+
     - name: Delete Gluster volume(s)
-      gluster_volume:
-         state: absent
-         name: "{{ item }}"
+      command: "gluster volume delete {{ item }}"
+      #gluster_volume:
+      #   state: absent
+      #   name: "{{ item }}"
       with_items: "{{ gluster_volumes }}"
       run_once: true
 
