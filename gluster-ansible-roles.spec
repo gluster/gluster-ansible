@@ -1,6 +1,6 @@
 %global rolesdir %{_sysconfdir}/ansible/roles/gluster.ansible
 %global docdir %{_datadir}/doc/gluster.ansible
-%global buildnum 26
+%global buildnum 27
 
 Name:      gluster-ansible-roles
 Version:   1.0.5
@@ -42,6 +42,9 @@ install -p -m 644 README.md LICENSE %{buildroot}/%{docdir}
 %license LICENSE
 
 %changelog
+* Thu May 05 2022 Sandro Bonazzola <sbonazzo@redhat.com> - 1.0.5-27
+- Rebase on v1.0.5-27
+
 * Fri Apr 01 2022 Sandro Bonazzola <sbonazzo@redhat.com> - 1.0.5-26
 - Rebase on v1.0.5-26
 
