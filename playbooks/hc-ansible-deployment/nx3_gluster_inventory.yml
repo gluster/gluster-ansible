@@ -125,7 +125,6 @@ hc_nodes:
       - 2049/tcp
       - 54321/tcp
       - 5900/tcp
-      - 5900-6923/tcp
       - 5666/tcp
       - 16514/tcp
     gluster_infra_fw_permanent: true
