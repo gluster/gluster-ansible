@@ -1,0 +1,17 @@
+---
+- name: Bring up docker containers
+  hosts: localhost
+  gather_facts: false
+  vars:
+    inventory:
+      - name: host1
+        image: "gluster/glusterd2-nightly"
+  roles:
+    - { role: provision_docker, provision_docker_inventory: "{{inventory}}" }
+
+
+- name: Hello world
+  hosts: docker_containers
+  tasks:
+    - name: Test docker
+      command: 'echo ”Hello World”'
